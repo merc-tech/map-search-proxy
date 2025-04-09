@@ -1,0 +1,3872 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Longdo Map REST API documentation",
+        "summary": "",
+        "description": "The Longdo Map REST API offers comprehensive GIS APIs and data solutions, including place suggestions and searches, geocoding and reverse geocoding, address extraction, route planning, coverage area calculation, and more. You can obtain a free <a href='https://map.longdo.com/console' target='_blank'>Longdo Map API Key</a> to get started.",
+        "termsOfService": "https://map.longdo.com/api/terms",
+        "license-hide": {
+            "name": "Apache 2.0",
+            "identifier": "Apache-2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "2.1.1"
+    },
+    "externalDocs": {
+        "description": "Find out more about Longdo Map REST API",
+        "url": "https://api.longdo.com/map/doc/rest.php"
+    },
+    "tags": [
+        {
+            "name": "Place",
+            "description": ""
+        },
+        {
+            "name": "Address",
+            "description": ""
+        },
+        {
+            "name": "Route",
+            "description": ""
+        },
+        {
+            "name": "Geo",
+            "description": ""
+        }
+    ],
+    "paths": {
+        "/mapsearch/json/suggest": {
+            "servers": [
+                {
+                    "url": "https://search.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "keyword",
+                    "in": "query",
+                    "description": "Suggest keyword",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "area",
+                    "in": "query",
+                    "description": "Geocode of suggest area (Default: Any area)",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                },
+                {
+                    "name": "offset",
+                    "in": "query",
+                    "description": "Offset of the first result returned (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "limit",
+                    "in": "query",
+                    "description": "Number of results returned (Default: 10)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/suggestDataset"
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Place"
+                ],
+                "summary": "Suggest",
+                "description": "<label>Example</label><ul><li><a href=\"https://search.longdo.com/mapsearch/json/suggest?keyword=hotel&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://search.longdo.com/mapsearch/json/suggest?keyword=central&area=20&limit=5&key=fortestonlydonotuseinproduction!\" target=\"_blank\">With area and limit</a></li></ul>",
+                "operationId": "GetSuggestPlace",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "keyword": {
+                                                    "description": "Request keyword",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "List of results",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "w": {
+                                                        "description": "Suggest",
+                                                        "type": "string"
+                                                    },
+                                                    "d": {
+                                                        "description": "Suggest with keyword highlighted",
+                                                        "type": "string"
+                                                    },
+                                                    "s": {
+                                                        "description": "Dataset",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/mapsearch/json/search": {
+            "servers": [
+                {
+                    "url": "https://search.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "keyword",
+                    "in": "query",
+                    "description": "Search keyword",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "area",
+                    "in": "query",
+                    "description": "Geocode of search area (Default: Any area)",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                },
+                {
+                    "name": "lon",
+                    "in": "query",
+                    "description": "Longitude of the center of result (Default: Silom)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "lat",
+                    "in": "query",
+                    "description": "Latitude of the center of result (Default: Silom)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "span",
+                    "in": "query",
+                    "description": "Span with unit in deg, m or km (Default: Anywhere)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "tag",
+                    "in": "query",
+                    "description": "Tag (Default: Any tag)",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                },
+                {
+                    "name": "offset",
+                    "in": "query",
+                    "description": "Offset of the first result returned (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "limit",
+                    "in": "query",
+                    "description": "Number of results returned (Default: 20)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/searchDataset"
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Place"
+                ],
+                "summary": "Search",
+                "description": "<label>Example</label><ul><li><a href=\"https://search.longdo.com/mapsearch/json/search?keyword=hotel&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://search.longdo.com/mapsearch/json/search?keyword=central&area=20&limit=5&key=fortestonlydonotuseinproduction!\" target=\"_blank\">With area and limit</a></li></ul>",
+                "operationId": "GetSearchPlace",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "hasmore": {
+                                                    "description": "Has more result",
+                                                    "type": "boolean"
+                                                },
+                                                "start": {
+                                                    "description": "Start index",
+                                                    "type": "integer"
+                                                },
+                                                "end": {
+                                                    "description": "End index",
+                                                    "type": "integer"
+                                                },
+                                                "keyword": {
+                                                    "description": "Request keyword",
+                                                    "type": "string"
+                                                },
+                                                "lon": {
+                                                    "description": "Location of search parameter if specified",
+                                                    "type": "number"
+                                                },
+                                                "lat": {
+                                                    "description": "Location of search parameter if specified",
+                                                    "type": "number"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "List of results",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "description": "Type of result",
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "description": "Longdo Map ID",
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "Name",
+                                                        "type": "string"
+                                                    },
+                                                    "lat": {
+                                                        "description": "Latitude",
+                                                        "type": "number"
+                                                    },
+                                                    "lon": {
+                                                        "description": "Longitude",
+                                                        "type": "number"
+                                                    },
+                                                    "icon": {
+                                                        "description": "Icon image",
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "description": "List of tags",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "description": "Tag name",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "url": {
+                                                        "description": "Website",
+                                                        "type": "string"
+                                                    },
+                                                    "address": {
+                                                        "description": "Street address",
+                                                        "type": "string"
+                                                    },
+                                                    "tel": {
+                                                        "description": "Telephone number",
+                                                        "type": "string"
+                                                    },
+                                                    "contributor": {
+                                                        "description": "Last contributor",
+                                                        "type": "string"
+                                                    },
+                                                    "verified": {
+                                                        "description": "Is POI verified",
+                                                        "type": "boolean"
+                                                    },
+                                                    "obsoleted": {
+                                                        "description": "Is POI obsoleted",
+                                                        "type": "boolean"
+                                                    },
+                                                    "distance": {
+                                                        "description": "Distance from center in the same unit of span, if span is provided",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/smartsearch/json/search": {
+            "servers": [
+                {
+                    "url": "https://search.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "keyword",
+                    "in": "query",
+                    "description": "Search keyword",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "area",
+                    "in": "query",
+                    "description": "Geocode of search area (Default: Any area)",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                },
+                {
+                    "name": "lon",
+                    "in": "query",
+                    "description": "Longitude of the center of result (Default: Silom)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "lat",
+                    "in": "query",
+                    "description": "Latitude of the center of result (Default: Silom)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "span",
+                    "in": "query",
+                    "description": "Span with unit in deg, m or km (Default: Anywhere)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "tag",
+                    "in": "query",
+                    "description": "Tag (Default: Any tag)",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                },
+                {
+                    "name": "offset",
+                    "in": "query",
+                    "description": "Offset of the first result returned (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "limit",
+                    "in": "query",
+                    "description": "Number of results returned (Default: 20)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/searchDataset"
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/forceSmartSearch"
+                },
+                {
+                    "name": "forcelimit",
+                    "in": "query",
+                    "description": "Minimum numbers of result from the Search that will not trigger next step of SmartSearch unless the 'forcesmartsearch' is set to 1 (Default: 1)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/extendedSearch"
+                },
+                {
+                    "name": "extendedlimit",
+                    "in": "query",
+                    "description": "If the 'extendedsearch' is set to 1, this parameter is a minimum of longdo smart search results before using extended search (Default: 3)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "extendedkey",
+                    "in": "query",
+                    "description": "Extended API Key",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/extendedType"
+                },
+                {
+                    "name": "exceedtime",
+                    "in": "query",
+                    "description": "Limit time. If exceed, do only raw search. 0 = not use exceed time (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "cache",
+                    "in": "query",
+                    "description": "If equal to 1, enable cache (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "bit"
+                    }
+                },
+                {
+                    "name": "extractaddress",
+                    "in": "query",
+                    "description": "If set to 1, response an extracted address object (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "bit"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Place"
+                ],
+                "summary": "SmartSearch",
+                "description": "<label>Example</label><ul><li><a href=\"https://search.longdo.com/smartsearch/json/search?keyword=Silom%20Bangrak%20Bangkok&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Search address</a></li><li><a href=\"https://map-blog.longdo.com/smartsearch-api/\" target=\"_blank\">blog</a></li></ul>",
+                "operationId": "GetSmartSearchPlace",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "hasmore": {
+                                                    "description": "Has more result",
+                                                    "type": "boolean"
+                                                },
+                                                "start": {
+                                                    "description": "Start index",
+                                                    "type": "integer"
+                                                },
+                                                "end": {
+                                                    "description": "End index",
+                                                    "type": "integer"
+                                                },
+                                                "keyword": {
+                                                    "description": "Request keyword",
+                                                    "type": "string"
+                                                },
+                                                "lon": {
+                                                    "description": "Location of search parameter if specified",
+                                                    "type": "number"
+                                                },
+                                                "lat": {
+                                                    "description": "Location of search parameter if specified",
+                                                    "type": "number"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "List of results",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "description": "Type of result",
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "description": "Longdo Map ID",
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "Name",
+                                                        "type": "string"
+                                                    },
+                                                    "lat": {
+                                                        "description": "Latitude",
+                                                        "type": "number"
+                                                    },
+                                                    "lon": {
+                                                        "description": "Longitude",
+                                                        "type": "number"
+                                                    },
+                                                    "icon": {
+                                                        "description": "Icon image",
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "description": "List of tags",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "description": "Tag name",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "url": {
+                                                        "description": "Website",
+                                                        "type": "string"
+                                                    },
+                                                    "address": {
+                                                        "description": "Street address",
+                                                        "type": "string"
+                                                    },
+                                                    "tel": {
+                                                        "description": "Telephone number",
+                                                        "type": "string"
+                                                    },
+                                                    "contributor": {
+                                                        "description": "Last contributor",
+                                                        "type": "string"
+                                                    },
+                                                    "verified": {
+                                                        "description": "Is POI verified",
+                                                        "type": "boolean"
+                                                    },
+                                                    "obsoleted": {
+                                                        "description": "Is POI obsoleted",
+                                                        "type": "boolean"
+                                                    },
+                                                    "distance": {
+                                                        "description": "Distance from center in the same unit of span, if span is provided",
+                                                        "type": "string"
+                                                    },
+                                                    "source": {
+                                                        "description": "Map data source of search result, e.g., longdo, OSM",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/POIService/json/search": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "area",
+                    "in": "query",
+                    "description": "Geocode of search area (Default: Any area)",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                },
+                {
+                    "name": "lon",
+                    "in": "query",
+                    "description": "Longitude of the center of result (Default: Silom)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "lat",
+                    "in": "query",
+                    "description": "Latitude of the center of result (Default: Silom)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "span",
+                    "in": "query",
+                    "description": "Span with unit in deg, m or km (Default: Anywhere)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "tag",
+                    "in": "query",
+                    "description": "Tag (Default: Any tag)",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                },
+                {
+                    "name": "zoom",
+                    "in": "query",
+                    "description": "Importantness level of POI (Default: Any)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "offset",
+                    "in": "query",
+                    "description": "Offset of the first result returned (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "limit",
+                    "in": "query",
+                    "description": "Number of results returned (Default: 20)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/poiDataset"
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Place"
+                ],
+                "summary": "Nearby POI",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/POIService/json/search?lon=100.5&lat=13.7&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://api.longdo.com/POIService/json/search?tag=hotel&area=20&limit=10&key=fortestonlydonotuseinproduction!\" target=\"_blank\">With tag, area and limit</a></li></ul>",
+                "operationId": "GetNearbyPlace",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "hasmore": {
+                                                    "description": "Has more result",
+                                                    "type": "boolean"
+                                                },
+                                                "start": {
+                                                    "description": "Start index",
+                                                    "type": "integer"
+                                                },
+                                                "end": {
+                                                    "description": "End index",
+                                                    "type": "integer"
+                                                },
+                                                "keyword": {
+                                                    "description": "Request keyword",
+                                                    "type": "string"
+                                                },
+                                                "lon": {
+                                                    "description": "Location of search parameter if specified",
+                                                    "type": "number"
+                                                },
+                                                "lat": {
+                                                    "description": "Location of search parameter if specified",
+                                                    "type": "number"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "List of results",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "description": "Type of result",
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "description": "Longdo Map ID",
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "description": "Name",
+                                                        "type": "string"
+                                                    },
+                                                    "lat": {
+                                                        "description": "Latitude",
+                                                        "type": "number"
+                                                    },
+                                                    "lon": {
+                                                        "description": "Longitude",
+                                                        "type": "number"
+                                                    },
+                                                    "icon": {
+                                                        "description": "Icon image",
+                                                        "type": "string"
+                                                    },
+                                                    "tag": {
+                                                        "description": "List of tags",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "description": "Tag name",
+                                                            "type": "string"
+                                                        }
+                                                    },
+                                                    "url": {
+                                                        "description": "Website",
+                                                        "type": "string"
+                                                    },
+                                                    "address": {
+                                                        "description": "Street address",
+                                                        "type": "string"
+                                                    },
+                                                    "tel": {
+                                                        "description": "Telephone number",
+                                                        "type": "string"
+                                                    },
+                                                    "contributor": {
+                                                        "description": "Last contributor",
+                                                        "type": "string"
+                                                    },
+                                                    "verified": {
+                                                        "description": "Is POI verified",
+                                                        "type": "boolean"
+                                                    },
+                                                    "obsoleted": {
+                                                        "description": "Is POI obsoleted",
+                                                        "type": "boolean"
+                                                    },
+                                                    "distance": {
+                                                        "description": "Distance from center in the same unit of span, if span is provided",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/smartsearch/json/extract_address/v2": {
+            "servers": [
+                {
+                    "url": "https://search.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "text",
+                    "in": "query",
+                    "description": "Address text for extract location",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "correction",
+                    "in": "query",
+                    "description": "If set to 1, enable text correction mode (Default: 1)",
+                    "required": false,
+                    "schema": {
+                        "type": "bit"
+                    }
+                },
+                {
+                    "name": "censor",
+                    "in": "query",
+                    "description": "If set to 1, telephone and email will be removed from response remark (Default: 0)",
+                    "required": false,
+                    "schema": {
+                        "type": "bit"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Extract address",
+                "description": "<label>Example</label><ul><li><a href=\"https://search.longdo.com/smartsearch/json/extract_address/v2?text=%E0%B8%AD%E0%B8%B2%E0%B8%84%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%97%E0%B8%A3%E0%B8%AA%E0%B9%81%E0%B8%84%E0%B8%A7%E0%B8%A3%E0%B9%8C%20%E0%B8%AD%E0%B8%AD%E0%B8%9F%E0%B8%9F%E0%B8%B4%E0%B8%A8%20%E0%B8%97%E0%B8%B2%E0%B8%A7%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%2098%20%E0%B8%8A%E0%B8%B1%E0%B9%89%E0%B8%99%204%20%E0%B8%AB%E0%B9%89%E0%B8%AD%E0%B8%87%20407%20%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%AA%E0%B8%B2%E0%B8%97%E0%B8%A3%E0%B9%80%E0%B8%AB%E0%B8%99%E0%B8%B7%E0%B8%AD%20%E0%B9%81%E0%B8%82%E0%B8%A7%E0%B8%87%E0%B8%AA%E0%B8%B5%E0%B8%A5%E0%B8%A1%20%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%A3%E0%B8%B1%E0%B8%81%20%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3%2010500%20Tel.%20026329700%20Email:%20info@mm.co.th&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://search.longdo.com/smartsearch/json/extract_address/v2?correction=0&text=%E0%B8%AD%E0%B8%B2%E0%B8%84%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%97%E0%B8%A3%E0%B8%AA%E0%B9%81%E0%B8%84%E0%B8%A7%E0%B8%A3%E0%B9%8C%20%E0%B8%AD%E0%B8%AD%E0%B8%9F%E0%B8%9F%E0%B8%B4%E0%B8%A8%20%E0%B8%97%E0%B8%B2%E0%B8%A7%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%2098%20%E0%B8%8A%E0%B8%B1%E0%B9%89%E0%B8%99%204%20%E0%B8%AB%E0%B9%89%E0%B8%AD%E0%B8%87%20407%20%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%AA%E0%B8%B2%E0%B8%97%E0%B8%A3%E0%B9%80%E0%B8%AB%E0%B8%99%E0%B8%B7%E0%B8%AD%20%E0%B9%81%E0%B8%82%E0%B8%A7%E0%B8%87%E0%B8%AA%E0%B8%B5%E0%B8%A5%E0%B8%A1%20%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%A3%E0%B8%B1%E0%B8%81%20%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3%2010500%20Tel.%20026329700%20Email:%20info@mm.co.th&key=fortestonlydonotuseinproduction!\" target=\"_blank\">No correction</a></li></li><li><a href=\"https://search.longdo.com/smartsearch/json/extract_address/v2?censor=1&text=%E0%B8%AD%E0%B8%B2%E0%B8%84%E0%B8%B2%E0%B8%A3%E0%B8%AA%E0%B8%B2%E0%B8%97%E0%B8%A3%E0%B8%AA%E0%B9%81%E0%B8%84%E0%B8%A7%E0%B8%A3%E0%B9%8C%20%E0%B8%AD%E0%B8%AD%E0%B8%9F%E0%B8%9F%E0%B8%B4%E0%B8%A8%20%E0%B8%97%E0%B8%B2%E0%B8%A7%E0%B9%80%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%2098%20%E0%B8%8A%E0%B8%B1%E0%B9%89%E0%B8%99%204%20%E0%B8%AB%E0%B9%89%E0%B8%AD%E0%B8%87%20407%20%E0%B8%96%E0%B8%99%E0%B8%99%E0%B8%AA%E0%B8%B2%E0%B8%97%E0%B8%A3%E0%B9%80%E0%B8%AB%E0%B8%99%E0%B8%B7%E0%B8%AD%20%E0%B9%81%E0%B8%82%E0%B8%A7%E0%B8%87%E0%B8%AA%E0%B8%B5%E0%B8%A5%E0%B8%A1%20%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%A3%E0%B8%B1%E0%B8%81%20%E0%B8%81%E0%B8%A3%E0%B8%B8%E0%B8%87%E0%B9%80%E0%B8%97%E0%B8%9E%E0%B8%A1%E0%B8%AB%E0%B8%B2%E0%B8%99%E0%B8%84%E0%B8%A3%2010500%20Tel.%20026329700%20Email:%20info@mm.co.th&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Censor</a></li></ul>",
+                "operationId": "GetExtractAddress",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "input": {
+                                                    "description": "Text input",
+                                                    "type": "string"
+                                                },
+                                                "remark": {
+                                                    "description": "Remaining text after address extraction",
+                                                    "type": "string"
+                                                },
+                                                "locale": {
+                                                    "description": "Language in ISO 639-1 format",
+                                                    "type": "LocaleCode"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "List of results",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "house_no": {
+                                                        "description": "House number",
+                                                        "type": "string"
+                                                    },
+                                                    "floor": {
+                                                        "description": "Floor",
+                                                        "type": "string"
+                                                    },
+                                                    "room": {
+                                                        "description": "Room number",
+                                                        "type": "string"
+                                                    },
+                                                    "moo": {
+                                                        "description": "Village number",
+                                                        "type": "string"
+                                                    },
+                                                    "place": {
+                                                        "description": "Place",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "building": {
+                                                        "description": "Building",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "condominium": {
+                                                        "description": "Condominium",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "village": {
+                                                        "description": "Gated community",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "village_official": {
+                                                        "description": "Village",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "sublane": {
+                                                        "description": "Narrow alley",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "alley": {
+                                                        "description": "Alley",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "road": {
+                                                        "description": "Road",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "subdistrict": {
+                                                        "description": "Subdistrict",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "district": {
+                                                        "description": "District",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "province": {
+                                                        "description": "Province",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "postcode": {
+                                                        "description": "Postcode",
+                                                        "type": "string"
+                                                    },
+                                                    "country": {
+                                                        "description": "Country",
+                                                        "type": "string"
+                                                    },
+                                                    "confidence": {
+                                                        "description": "Score",
+                                                        "type": "number"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/addresslookup/api/addr/geocoding": {
+            "servers": [
+                {
+                    "url": "https://search.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "text",
+                    "in": "query",
+                    "description": "Address text for search location",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "dataset",
+                    "in": "query",
+                    "description": "Additional dataset",
+                    "required": false,
+                    "schema": {
+                        "type": "Comma-separated string values"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Geocoding",
+                "description": "<label>Example</label><ul><li><a href=\"https://search.longdo.com/addresslookup/api/addr/geocoding?text=Sathorn%20Square%20Office%20Tower,%20Sathorn%20Nuea%20Rd.,%20Silom,%20Bangrak,%20Bangkok&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://map-blog.longdo.com/geocoding-api/\" target=\"_blank\">blog</a></li></ul>",
+                "operationId": "GetGeocoding",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "List of results",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "confidence": {
+                                                "description": "Score",
+                                                "type": "number"
+                                            },
+                                            "location": {
+                                                "description": "Location",
+                                                "type": "object",
+                                                "properties": {
+                                                    "point": {
+                                                        "description": "Building",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "houseno": {
+                                                        "description": "House number",
+                                                        "type": "string"
+                                                    },
+                                                    "road": {
+                                                        "description": "Road",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "village": {
+                                                        "description": "Village name",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "moo": {
+                                                        "description": "Village number",
+                                                        "type": "string"
+                                                    },
+                                                    "subdistrict": {
+                                                        "description": "Subdistrict (tambon, khwaeng)",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "district": {
+                                                        "description": "District (amphoe, khet)",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "province": {
+                                                        "description": "Province",
+                                                        "$ref": "#/components/schemas/AddressInfo"
+                                                    },
+                                                    "zipcode": {
+                                                        "description": "Zipcode",
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "point": {
+                                                "description": "Possible location",
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/Location"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/map/services/address": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "description": "Search with Longdo Map ID",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "lon",
+                    "in": "query",
+                    "description": "Search with longitude if id isn't provide",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "lat",
+                    "in": "query",
+                    "description": "Search with latitude if id isn't provide",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "noadmin",
+                    "in": "query",
+                    "description": "Don't include geocode/province/district/subdistrict in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "nopostcode",
+                    "in": "query",
+                    "description": "Don't include postcode in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "noelevation",
+                    "in": "query",
+                    "description": "Don't include elevation in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "noroad",
+                    "in": "query",
+                    "description": "Don't include road in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "noaoi",
+                    "in": "query",
+                    "description": "Don't include area of interest in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "nowater",
+                    "in": "query",
+                    "description": "Don't include water body in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Reverse geocoding",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/map/services/address?id=A10000001&key=fortestonlydonotuseinproduction!\" target=\"_blank\">With id</a></li><li><a href=\"https://api.longdo.com/map/services/address?lon=100.5&lat=13.7&noadmin=1&nopostcode=1&noelevation=1&noaoi=1&nowater=1&key=fortestonlydonotuseinproduction!\" target=\"_blank\">With lat/lon, road only</a></li></ul>",
+                "operationId": "GetReverseGeocoding",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReverseGeocodingResult"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/map/services/addresses": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "lon[]",
+                    "in": "query",
+                    "description": "Search with longitude, up to 100 coordinates (Optional)",
+                    "required": false,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "style": "spaceDelimited",
+                    "explode": true
+                },
+                {
+                    "name": "lat[]",
+                    "in": "query",
+                    "description": "Search with latitude, up to 100 coordinates (Optional)",
+                    "required": false,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        }
+                    },
+                    "style": "spaceDelimited",
+                    "explode": true
+                },
+                {
+                    "name": "wkt",
+                    "in": "query",
+                    "description": "Search with well-known text if lon/lat isn't provide, show only admin in the response (Optional)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "noadmin",
+                    "in": "query",
+                    "description": "Don't include geocode/province/district/subdistrict in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "nopostcode",
+                    "in": "query",
+                    "description": "Don't include postcode in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "noelevation",
+                    "in": "query",
+                    "description": "Don't include elevation in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "noroad",
+                    "in": "query",
+                    "description": "Don't include road in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "noaoi",
+                    "in": "query",
+                    "description": "Don't include area of interest in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "nowater",
+                    "in": "query",
+                    "description": "Don't include water body in the response (Default: Include)",
+                    "required": false,
+                    "schema": {
+                        "type": "any"
+                    }
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Batch reverse geocoding",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/map/services/addresses?lon%5B0%5D=100&lat%5B0%5D=13&lon%5B1%5D=101&lat%5B1%5D=14&noelevation=1&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Search 2 locations without elevation</a></li><li><a href=\"https://api.longdo.com/map/services/addresses?wkt=LINESTRING(100%2015,100.1%2014.9)&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Search with WKT</a></li></ul>",
+                "operationId": "GetBatchReverseGeocoding",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "List of results",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ReverseGeocodingResult"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/POIService/json/address": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "geocode",
+                    "in": "query",
+                    "description": "Search with geocode (Optional)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "postcode",
+                    "in": "query",
+                    "description": "Search with postcode if geocode isn't provide (Optional)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Geocode / Postcode",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/POIService/json/address?geocode=100101&key=fortestonlydonotuseinproduction!\" target=\"_blank\">With geocode</a></li><li><a href=\"https://api.longdo.com/POIService/json/address?postcode=10100&locale=en&key=fortestonlydonotuseinproduction!\" target=\"_blank\">With postcode, Result in English</a></li></ul>",
+                "operationId": "GetGeocodePostcode",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "geocode": {
+                                            "description": "Geocode",
+                                            "type": "string"
+                                        },
+                                        "province": {
+                                            "description": "Province",
+                                            "type": "string"
+                                        },
+                                        "district": {
+                                            "description": "District",
+                                            "type": "string"
+                                        },
+                                        "subdistrict": {
+                                            "description": "Subdistrict",
+                                            "type": "string"
+                                        },
+                                        "lat": {
+                                            "description": "Latitude",
+                                            "type": "number"
+                                        },
+                                        "lon": {
+                                            "description": "Longitude",
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/RouteService/json/route/guide": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "flon",
+                    "in": "query",
+                    "description": "Longitude of the starting point",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "flat",
+                    "in": "query",
+                    "description": "Latitude of the starting point",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "tlon",
+                    "in": "query",
+                    "description": "Longitude of the destination",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "tlat",
+                    "in": "query",
+                    "description": "Latitude of the destination",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/routeMode"
+                },
+                {
+                    "$ref": "#/components/parameters/routeType"
+                },
+                {
+                    "$ref": "#/components/parameters/routeRestrict"
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "time",
+                    "in": "query",
+                    "description": "Departure time, use with avoid traffic mode (Default: now, Past time is invalid)",
+                    "required": false,
+                    "schema": {
+                        "type": "Unix time"
+                    }
+                },
+                {
+                    "name": "maxresult",
+                    "in": "query",
+                    "description": "Number of results (Default: 1, Max: 8)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "Calculate route",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/RouteService/json/route/guide?flon=100.53726&flat=13.72427&tlon=100.54061&tlat=13.72669&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://api.longdo.com/RouteService/json/route/guide?flon=100.53726&flat=13.72427&tlon=100.54061&tlat=13.72669&mode=t&type=25&locale=th&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Avoid traffic mode, Use road/ferry/tollway, Result in Thai</a></li></ul>",
+                "operationId": "GetCalculateRoute",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "from": {
+                                                    "description": "Starting point",
+                                                    "$ref": "#/components/schemas/Location"
+                                                },
+                                                "to": {
+                                                    "description": "Destination",
+                                                    "$ref": "#/components/schemas/Location"
+                                                },
+                                                "config": {
+                                                    "description": "Request parameters",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "List of results",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "fdistance": {
+                                                        "description": "Distance from starting point to nearest road in meters",
+                                                        "type": "number"
+                                                    },
+                                                    "tdistance": {
+                                                        "description": "Distance from nearest road to destination in meters",
+                                                        "type": "number"
+                                                    },
+                                                    "distance": {
+                                                        "description": "Distance in meters",
+                                                        "type": "integer"
+                                                    },
+                                                    "interval": {
+                                                        "description": "Travel time in seconds",
+                                                        "type": "integer"
+                                                    },
+                                                    "id": {
+                                                        "description": "Path ID for Get route path API",
+                                                        "type": "integer"
+                                                    },
+                                                    "guide": {
+                                                        "description": "List of roads",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "description": "Road",
+                                                            "$ref": "#/components/schemas/GuideRoute"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/RouteService/json/route/path": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "description": "Path ID from <a href=\"#operations-Route-GetCalculateRoute\">Calculate route</a> API",
+                    "required": true,
+                    "schema": {
+                        "type": "integer"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "Get route path",
+                "operationId": "GetRoutePath",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "description": "Request path ID",
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "List of results, same index as <a href=\"#operations-Route-GetCalculateRoute\">Calculate route</a> API",
+                                            "type": "array",
+                                            "items": {
+                                                "description": "Road line",
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/Location"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/RouteService/geojson/route": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "flon",
+                    "in": "query",
+                    "description": "Longitude of the starting point",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "flat",
+                    "in": "query",
+                    "description": "Latitude of the starting point",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "tlon",
+                    "in": "query",
+                    "description": "Longitude of the destination",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "tlat",
+                    "in": "query",
+                    "description": "Latitude of the destination",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/routeMode"
+                },
+                {
+                    "$ref": "#/components/parameters/routeType"
+                },
+                {
+                    "$ref": "#/components/parameters/routeRestrict"
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "time",
+                    "in": "query",
+                    "description": "Departure time, use with avoid traffic mode (Default: now, Past time is invalid)",
+                    "required": false,
+                    "schema": {
+                        "type": "Unix time"
+                    }
+                },
+                {
+                    "name": "maxresult",
+                    "in": "query",
+                    "description": "Number of results (Default: 1, Max: 8)",
+                    "required": false,
+                    "schema": {
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "Get Calculate route in GeoJSON",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/RouteService/geojson/route?flon=100.53726&flat=13.72427&tlon=100.54061&tlat=13.72669&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://api.longdo.com/RouteService/geojson/route?flon=100.53726&flat=13.72427&tlon=100.54061&tlat=13.72669&mode=d&type=17&locale=th&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum distance mode, Use road/tollway, Result in Thai</a></li></ul>",
+                "operationId": "GetCalculateRouteInGeoJSON",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/geo+json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "FeatureCollection",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "example": "FeatureCollection"
+                                        },
+                                        "features": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "type": {
+                                                        "description": "Result",
+                                                        "type": "string",
+                                                        "example": "Feature"
+                                                    },
+                                                    "geometry": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "LineString"
+                                                            },
+                                                            "coordinates": {
+                                                                "type": "array",
+                                                                "items": {
+                                                                    "description": "[ longitude, latitude ]",
+                                                                    "type": "array",
+                                                                    "items": {
+                                                                        "type": "number"
+                                                                    },
+                                                                    "example": "[ 100.537323, 13.724069 ]",
+                                                                    "minItems": 2,
+                                                                    "maxItems": 2
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    "properties": {
+                                                        "$ref": "#/components/schemas/GuideRoute"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "from": {
+                                                    "description": "Starting point",
+                                                    "$ref": "#/components/schemas/Location"
+                                                },
+                                                "to": {
+                                                    "description": "Destination",
+                                                    "$ref": "#/components/schemas/Location"
+                                                },
+                                                "config": {
+                                                    "description": "Request parameters",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "Routing data",
+                                            "type": "object",
+                                            "properties": {
+                                                "fdistance": {
+                                                    "description": "Distance from starting point to nearest road in meters",
+                                                    "type": "number"
+                                                },
+                                                "tdistance": {
+                                                    "description": "Distance from nearest road to destination in meters",
+                                                    "type": "number"
+                                                },
+                                                "distance": {
+                                                    "description": "Distance in meters",
+                                                    "type": "integer"
+                                                },
+                                                "interval": {
+                                                    "description": "Travel time in seconds",
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/RouteService/json/route/matrix": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "flon[]",
+                    "in": "query",
+                    "description": "Longitude of the starting point, up to 25 coordinates",
+                    "required": true,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1,
+                        "maxItems": 25
+                    }
+                },
+                {
+                    "name": "flat[]",
+                    "in": "query",
+                    "description": "Latitude of the starting point, up to 25 coordinates",
+                    "required": true,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1,
+                        "maxItems": 25
+                    }
+                },
+                {
+                    "name": "tlon[]",
+                    "in": "query",
+                    "description": "Longitude of the destinatio, up to 25 coordinates",
+                    "required": true,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1,
+                        "maxItems": 25
+                    }
+                },
+                {
+                    "name": "tlat[]",
+                    "in": "query",
+                    "description": "Latitude of the destination, up to 25 coordinates",
+                    "required": true,
+                    "schema": {
+                        "type": "array",
+                        "items": {
+                            "type": "number"
+                        },
+                        "minItems": 1,
+                        "maxItems": 25
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/routeMode"
+                },
+                {
+                    "$ref": "#/components/parameters/routeType"
+                },
+                {
+                    "$ref": "#/components/parameters/routeRestrict"
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "time",
+                    "in": "query",
+                    "description": "Departure time, use with avoid traffic mode (Default: now, Past time is invalid)",
+                    "required": false,
+                    "schema": {
+                        "type": "Unix time"
+                    }
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "Calculate route matrix",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/RouteService/json/route/matrix?flon%5B0%5D=100.5&flat%5B0%5D=13.7&flon%5B1%5D=100.5&flat%5B1%5D=14.7&tlon%5B0%5D=101.5&tlat%5B0%5D=13.7&tlon%5B1%5D=101.5&tlat%5B1%5D=14.7&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params 2x2 matrix</a></li></ul>",
+                "operationId": "GetCalculateRouteMatrix",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "fromCount": {
+                                                    "description": "Number of starting points",
+                                                    "type": "integer"
+                                                },
+                                                "toCount": {
+                                                    "description": "Number of destinations",
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        },
+                                        "data": {
+                                            "description": "2D List of results for each starting points and destinations",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "interval": {
+                                                            "description": "Travel time in seconds",
+                                                            "type": "integer"
+                                                        },
+                                                        "distance": {
+                                                            "description": "Distance in meters",
+                                                            "type": "integer"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/RouteService/json/route/snap": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "wkt",
+                    "in": "query",
+                    "description": "LineString Well-known text",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "Snap to road",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/RouteService/json/route/snap?wkt=LINESTRING(100.5%2013.7,100.501%2013.701,100.499%2013.702)&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Example 1</a></li></ul>",
+                "operationId": "GetSnapToRoad",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Snap points for each WKT coordinated",
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Location"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/RouteService/json/traffic/speed": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "lon",
+                    "in": "query",
+                    "description": "Longitude",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "lat",
+                    "in": "query",
+                    "description": "Latitude",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "range",
+                    "in": "query",
+                    "description": "Search range in degree (Default: 0.001, Max: 0.001 ~100m)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/locale"
+                },
+                {
+                    "name": "time",
+                    "in": "query",
+                    "description": "Set to get predicted data (Default: now, Past time is invalid)",
+                    "required": false,
+                    "schema": {
+                        "type": "Unix time"
+                    }
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "Traffic speed",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/RouteService/json/traffic/speed?lon=100.5&lat=13.7&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://api.longdo.com/RouteService/json/traffic/speed?lon=0&lat=0&key=fortestonlydonotuseinproduction!\" target=\"_blank\">No traffic data</a></li></ul>",
+                "operationId": "GetTrafficSpeed",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "road": {
+                                            "description": "Road name",
+                                            "type": "string"
+                                        },
+                                        "dir": {
+                                            "description": "Direction related to road geometry (forward / reverse)",
+                                            "type": "string"
+                                        },
+                                        "speed": {
+                                            "description": "Speed in m/s",
+                                            "type": "number"
+                                        },
+                                        "source": {
+                                            "description": "Source of data (real-time / predicted)",
+                                            "type": "string"
+                                        },
+                                        "lon": {
+                                            "description": "Nearest position on road",
+                                            "type": "number"
+                                        },
+                                        "lat": {
+                                            "description": "Nearest position on road",
+                                            "type": "number"
+                                        },
+                                        "meta": {
+                                            "description": "Error code and message if no data found at the request location",
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer"
+                                                },
+                                                "message": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/RouteService/json/span/get": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "flon",
+                    "in": "query",
+                    "description": "Longitude of the starting point",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "flat",
+                    "in": "query",
+                    "description": "Latitude of the starting point",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "span",
+                    "in": "query",
+                    "description": "Span with unit in m (meters, up to 30000m) or s (second, up to 1800s)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "$ref": "#/components/parameters/spanFlag"
+                },
+                {
+                    "name": "callback",
+                    "in": "query",
+                    "description": "JSONP Callback function (Default: Response in JSON)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "Get span area",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/RouteService/json/span/get?flon=100.53726&flat=13.72427&span=1000m&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li><li><a href=\"https://api.longdo.com/RouteService/json/span/get?flon=100.53726&flat=13.72427&span=5000m&flag=2&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Only boundary</a></li></ul>",
+                "operationId": "GetSpanArea",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "from": {
+                                            "description": "Starting point",
+                                            "$ref": "#/components/schemas/Location"
+                                        },
+                                        "dir": {
+                                            "description": "Direction related to road geometry (forward / reverse)",
+                                            "type": "string"
+                                        },
+                                        "lines": {
+                                            "description": "Road lines",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/Location"
+                                                }
+                                            }
+                                        },
+                                        "polygon": {
+                                            "description": "Boundary of span)",
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Location"
+                                            }
+                                        },
+                                        "meta": {
+                                            "description": "Error code and message if no data found at the request location",
+                                            "type": "object",
+                                            "properties": {
+                                                "status": {
+                                                    "type": "integer"
+                                                },
+                                                "message": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/route-tsp-v2": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "post": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "TSP (Travelling Salesman Problem) - Route Planner",
+                "description": "<label>Example</label><ul><li><a href=\"https://map.longdo.com/blog/route-planner-api/\" target=\"_blank\">Blog</a></li></ul>",
+                "operationId": "GetRoutePlanner",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "key": {
+                                        "description": "Longdo Map API Key",
+                                        "type": "string"
+                                    },
+                                    "lon[]": {
+                                        "description": "Longitude list",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "lat[]": {
+                                        "description": "Latitude list",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "cost": {
+                                        "description": "Cost (Default: false) <ul><li>true = time_step and distance_step details will be included</li><li>false = Only the optimal path without additional information will be returned</li></ul>",
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "otsp": {
+                                        "description": "Is Open Loop TSP (Default: false ) <ul><li>true = Return to start/first point</li><li>false = Do not return to start/first point</li></ul>",
+                                        "type": "boolean",
+                                        "example": false
+                                    },
+                                    "mode": {
+                                        "description": "Search mode
+                      <table><tr><td>Available value</td><td>Description</td></tr>
+                      <tr><td>t (default)</td><td>Fastest route and avoid traffic congestions, with the real-time or predicted traffic condition (if time is specified)</td></tr>
+                      <tr><td>c</td><td>Fastest route (disregarding traffic condition), return static travel time</td></tr>
+                      <tr><td>d</td><td>Shortest route, return static travel time</td></tr>
+                      <tr><td>e</td><td>Shortest route, return travel time with traffic condition</td></tr>
+                      </table>","type": "string",
+                                        "enum": [
+                                            "t",
+                                            "c",
+                                            "d",
+                                            "e"
+                                        ],
+                                        "default": "t",
+                                        "example": "t"
+                                    }
+                                }
+                            },
+                            "encoding": {
+                                "lon[]": {
+                                    "style": "form",
+                                    "explode": true,
+                                    "allowReserved": true
+                                },
+                                "lat[]": {
+                                    "style": "form",
+                                    "explode": true,
+                                    "allowReserved": true
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "description": "HTTP status code indicating the success or failure of the request",
+                                            "type": "integer"
+                                        },
+                                        "message": {
+                                            "description": "Description of the status",
+                                            "type": "string"
+                                        },
+                                        "otsp": {
+                                            "description": "Indicating whether the route is an Open Loop TSP (OTSP) \"0\" = Do not return to start/first point, \"1\" = Return to start/first point",
+                                            "type": "string"
+                                        },
+                                        "mode": {
+                                            "description": "Route search mode
+                        <table><tr><td>Available value</td><td>Description</td></tr>
+                        <tr><td>t (default)</td><td>Fastest route and avoid traffic congestions, with the real-time or predicted traffic condition (if time is specified)</td></tr>
+                        <tr><td>c</td><td>Fastest route (disregarding traffic condition), return static travel time</td></tr>
+                        <tr><td>d</td><td>Shortest route, return static travel time</td></tr>
+                        <tr><td>e</td><td>Shortest route, return travel time with traffic condition</td></tr>
+                        </table>","type": "string"
+                                        },
+                                        "body": {
+                                            "description": "Contains detailed information about the route",
+                                            "type": "object",
+                                            "properties": {
+                                                "sequence": {
+                                                    "description": "Ordered list of indices representing the sequence in which locations should be visited. The sequence is circular, ending where it began",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "location": {
+                                                    "description": "Array of objects, each containing latitude (lat) and longitude (lon) of a specific location",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Location"
+                                                    }
+                                                },
+                                                "total_distance": {
+                                                    "description": "Total distance of the optimal route",
+                                                    "type": "integer"
+                                                },
+                                                "total_time": {
+                                                    "description": "Total time required to traverse the optimal route",
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ws/route/location": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "route_no",
+                    "in": "query",
+                    "description": "หมายเลขทางหลวง (Route number)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "km",
+                    "in": "query",
+                    "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "สืบค้นข้อมูลพิกัดจากหมายเลขทางหลวง และหลักกิโลเมตร (Get location by route no.)",
+                "description": "<label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/route/location?route_no=4&km=177.367&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+                "operationId": "GetLocationByRouteNo",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "object",
+                                            "properties": {
+                                                "route_no": {
+                                                    "type": "string",
+                                                    "description": "หมายเลขทางหลวง (Route number)"
+                                                },
+                                                "road_name": {
+                                                    "type": "string",
+                                                    "description": "ชื่อถนน (Road name)"
+                                                },
+                                                "km": {
+                                                    "type": "string",
+                                                    "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)"
+                                                },
+                                                "km_start": {
+                                                    "type": "string",
+                                                    "description": "กิโลเมตรเริ่มต้นของทางหลวง (Begin Kilometre marker)"
+                                                },
+                                                "km_end": {
+                                                    "type": "string",
+                                                    "description": "กิโลเมตรสิ้นสุดของทางหลวง (End Kilometre marker)"
+                                                },
+                                                "lat": {
+                                                    "type": "string",
+                                                    "description": "ละติจูดของตำแหน่งหลักกิโลเมตร (Latitude)"
+                                                },
+                                                "lon": {
+                                                    "type": "string",
+                                                    "description": "ลองจิจูดของตำแหน่งหลักกิโลเมตร (Longitude)"
+                                                },
+                                                "source": {
+                                                    "type": "string",
+                                                    "description": "ที่มาของข้อมูล (Data source) - DOH: กรมทางหลวง, DRR: กรมทางหลวงชนบท"
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/route/name": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "lat",
+                    "in": "query",
+                    "description": "ละติจูด (Latitude)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "lon",
+                    "in": "query",
+                    "description": "ลองจิจูด (Longitude)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Route"
+                ],
+                "summary": "สืบค้นข้อมูลหมายเลขทางหลวง และหลักกิโลเมตร จากพิกัดทางภูมิศาสตร์ (ละติจูด, ลองจิจูด) (Get route by location)",
+                "description": "<label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/route/name?lat=13.776625&lon=100.178303&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+                "operationId": "GetRouteByLocation",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "route_no": {
+                                                        "type": "string",
+                                                        "description": "หมายเลขทางหลวง (Route number)"
+                                                    },
+                                                    "road_name": {
+                                                        "type": "string",
+                                                        "description": "ชื่อถนน (Road name)"
+                                                    },
+                                                    "km": {
+                                                        "type": "string",
+                                                        "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)"
+                                                    },
+                                                    "distance": {
+                                                        "type": "string",
+                                                        "description": "ระยะห่างของหลักกิโลเมตรและพิกัดทางภูมิศาสตร์ [หน่วยเป็นเมตร] (Distance from input location [Unit: metre])"
+                                                    },
+                                                    "source": {
+                                                        "type": "string",
+                                                        "description": "ที่มาของข้อมูล (Data source) - DOH: กรมทางหลวง, DRR: กรมทางหลวงชนบท"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "span": {
+                                                    "type": "string",
+                                                    "description": "รัศมีในการสืบค้น [หน่วยเป็น m:เมตร, deg:องศา] (Span [in m:metres, deg:degrees])"
+                                                },
+                                                "max_span_m": {
+                                                    "type": "string",
+                                                    "description": "รัศมีที่กำหนดไว้สูงสุดในการสืบค้น [เมตร] (Maximum span value in metres)"
+                                                },
+                                                "max_span_deg": {
+                                                    "type": "string",
+                                                    "description": "รัศมีที่กำหนดไว้สูงสุดในการสืบค้น [องศา] (Maximum span value in degrees)"
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/GeoServiceMS/json/areainfo": {
+            "servers": [
+                {
+                    "url": "https://api.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "polygon",
+                    "in": "query",
+                    "description": "Area (GeoJSON string)",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    },
+                    "example": "{\"coordinates\":[[[100.53864,13.73430],[100.54574,13.73397],[100.54439,13.72648],[100.53681,13.72965],[100.538640,13.73430]]],\"type\":\"Polygon\"}"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "Area info",
+                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/GeoServiceMS/json/areainfo?polygon=%7B%22coordinates%22%3A%5B%5B%5B100.53864%2C13.73430%5D%2C%5B100.54574%2C13.73397%5D%2C%5B100.54439%2C13.72648%5D%2C%5B100.53681%2C13.72965%5D%2C%5B100.538640%2C13.73430%5D%5D%5D%2C%22type%22%3A%22Polygon%22%7D&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+                "operationId": "GetAreaInfo",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "ms_building": {
+                                            "description": "Number of buildings",
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/population/facebook": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "wkt",
+                    "in": "query",
+                    "description": "พื้นที่ทางภูมิศาสตร์ ขนาดไม่เกิน 1,000 ตร.กม. ในรูปแบบ Well Known Text format (Bound of Area in Well Known Text format - The area must be less than 1,000 km²)",
+                    "required": true,
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "year",
+                    "in": "query",
+                    "description": "ปี ค.ศ. ของข้อมูล โดยหากไม่ระบุจะมีค่าเป็น 2020 (Data year - Default value: 2020)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "สืบค้นข้อมูลจำนวนประชากร จากพื้นที่ทางภูมิศาสตร์ (Get Facebook population)",
+                "description": "<label>Data Source</label><ul><li><a href=\"https://data.humdata.org/dataset/thailand-high-resolution-population-density-maps-demographic-estimates\" target=\"_blank\">Thailand: High Resolution Population Density Maps</a></li></ul><label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/population/facebook?wkt=POLYGON((100.52842274308205 13.723118631970578,100.52841201424599 13.721523974091259,100.53015008568764 13.721513551455093,100.53018227219582 13.72310820940525,100.52842274308205 13.723118631970578))&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+                "operationId": "GetFacebookPopulation",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "object",
+                                            "properties": {
+                                                "summary": {
+                                                    "type": "number",
+                                                    "description": "จำนวนประชากร หน่วยเป็นคน (A population [Unit: person])"
+                                                }
+                                            }
+                                        },
+                                        "meta": {
+                                            "description": "Metadata",
+                                            "type": "object",
+                                            "properties": {
+                                                "source": {
+                                                    "type": "string",
+                                                    "description": "ที่มาของข้อมูล (Data source)"
+                                                },
+                                                "year": {
+                                                    "type": "string",
+                                                    "description": "ปี ค.ศ. ของข้อมูล (Data year)"
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/stats/debt": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "year",
+                    "in": "query",
+                    "description": "ปีของข้อมูล (พ.ศ.)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "สืบค้นข้อมูลรายจ่ายครัวเรือน (ระดับ จังหวัด)",
+                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+                "operationId": "GetDebt",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "geocode": {
+                                                        "type": "string",
+                                                        "description": "รหัส จังหวัด(10 => bangkok, 11 => Samut Prakan)"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาไทย จังหวัด"
+                                                    },
+                                                    "name_en": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด"
+                                                    },
+                                                    "value": {
+                                                        "type": "number",
+                                                        "description": "หนี้ครัวเรือน (บาท)"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/stats/deposit": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "year",
+                    "in": "query",
+                    "description": "ปีของข้อมูล (พ.ศ.)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "month",
+                    "in": "query",
+                    "description": "เดือนของข้อมูล",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "geocode",
+                    "in": "query",
+                    "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "สืบค้นข้อมูลเงินฝาก (อำเภอ จังหวัด)",
+                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+                "operationId": "GetDeposit",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "geocode": {
+                                                        "type": "string",
+                                                        "description": "รหัส จังหวัด, อำเภอ(10 => bangkok, 11 => Samut Prakan)"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ"
+                                                    },
+                                                    "name_en": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ"
+                                                    },
+                                                    "value": {
+                                                        "type": "number",
+                                                        "description": "จำนวนเงิน (ล้านบาท)"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/stats/household": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "year",
+                    "in": "query",
+                    "description": "ปีของข้อมูล (พ.ศ.)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "geocode",
+                    "in": "query",
+                    "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "สืบค้นข้อมูลจำนวนหลังคาเรือน (ระดับ หมู่บ้าน ตำบล อำเภอ จังหวัด)",
+                "description": "<label>Data Source</label><ul><li><a href=\"https://stat.bora.dopa.go.th/stat/statnew/statMONTH/statmonth/#/view\" target=\"_blank\">สำนักบริหารการทะเบียน กรมการปกครอง</a></li></ul>",
+                "operationId": "GetHousehold",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "geocode": {
+                                                        "type": "string",
+                                                        "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                    },
+                                                    "name_en": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                    },
+                                                    "value": {
+                                                        "type": "number",
+                                                        "description": "จำนวนหลังคาเรือน (หลัง)"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/stats/income": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "year",
+                    "in": "query",
+                    "description": "ปีของข้อมูล (พ.ศ.)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "รายได้ประชากร (ระดับ จังหวัด)",
+                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+                "operationId": "GetIncome",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "geocode": {
+                                                        "type": "string",
+                                                        "description": "รหัส จังหวัด(10 => bangkok, 11 => Samut Prakan)"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาไทย จังหวัด"
+                                                    },
+                                                    "name_en": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด"
+                                                    },
+                                                    "value": {
+                                                        "type": "number",
+                                                        "description": "รายได้ (บาท)"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/stats/loan": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "year",
+                    "in": "query",
+                    "description": "ปีของข้อมูล (พ.ศ.)",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "month",
+                    "in": "query",
+                    "description": "เดือนของข้อมูล",
+                    "required": true,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "geocode",
+                    "in": "query",
+                    "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "สืบค้นข้อมูลสินเชื่อ (อำเภอ จังหวัด)",
+                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+                "operationId": "GetLoan",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "geocode": {
+                                                        "type": "string",
+                                                        "description": "รหัส จังหวัด, อำเภอ(10 => bangkok, 11 => Samut Prakan)"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ"
+                                                    },
+                                                    "name_en": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ"
+                                                    },
+                                                    "value": {
+                                                        "type": "number",
+                                                        "description": "จำนวนเงิน (ล้านบาท)"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        },
+        "/ws/stats/population": {
+            "servers": [
+                {
+                    "url": "https://map.longdo.com"
+                }
+            ],
+            "parameters": [
+                {
+                    "name": "year",
+                    "in": "query",
+                    "description": "ปีของข้อมูล (พ.ศ.)",
+                    "required": false,
+                    "schema": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "geocode",
+                    "in": "query",
+                    "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Geo"
+                ],
+                "summary": "สืบค้นข้อมูลจำนวนประชากรไทย (ระดับ หมู่บ้าน ตำบล อำเภอ จังหวัด)",
+                "description": "<label>Data Source</label><ul><li><a href=\"https://stat.bora.dopa.go.th/stat/statnew/statMONTH/statmonth/#/view\" target=\"_blank\">สำนักบริหารการทะเบียน กรมการปกครอง</a></li></ul>",
+                "operationId": "GetPopulation",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "description": "Result",
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "geocode": {
+                                                        "type": "string",
+                                                        "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                    },
+                                                    "name_en": {
+                                                        "type": "string",
+                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                    },
+                                                    "m_amount": {
+                                                        "type": "number",
+                                                        "description": "จำนวนประชากรชาย (คน)"
+                                                    },
+                                                    "f_amount": {
+                                                        "type": "number",
+                                                        "description": "จำนวนประชากรหญิง (คน)"
+                                                    },
+                                                    "total": {
+                                                        "type": "number",
+                                                        "description": "จำนวนรวม (คน)"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "status": {
+                                            "description": "สถานะของผลลัพธ์ (Response status)",
+                                            "type": "object",
+                                            "properties": {
+                                                "code": {
+                                                    "type": "integer",
+                                                    "description": "HTTP response status codes"
+                                                },
+                                                "error_code": {
+                                                    "type": "string",
+                                                    "description": "รหัสของความผิดพลาด (Error code)"
+                                                },
+                                                "text": {
+                                                    "type": "string",
+                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
+                                                },
+                                                "details": {
+                                                    "type": "string",
+                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "key": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AddressInfo": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "description": "Address info name (eg. place name, building name, condominium name etc.)",
+                        "type": "string"
+                    },
+                    "distance": {
+                        "description": "String similarity distance (0 = input text are all the same as correction data.)",
+                        "type": "integer"
+                    },
+                    "prefix": {
+                        "description": "Do the text input have prefix?",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "Location": {
+                "type": "object",
+                "properties": {
+                    "lon": {
+                        "description": "Longitude",
+                        "type": "number"
+                    },
+                    "lat": {
+                        "description": "Latitude",
+                        "type": "number"
+                    }
+                }
+            },
+            "ReverseGeocodingResult": {
+                "type": "object",
+                "properties": {
+                    "geocode": {
+                        "description": "Thailand geocode",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "Country",
+                        "type": "string"
+                    },
+                    "province": {
+                        "description": "Province or equivalent administrative division",
+                        "type": "string"
+                    },
+                    "district": {
+                        "description": "District or equivalent administrative division",
+                        "type": "string"
+                    },
+                    "subdistrict": {
+                        "description": "Subdistrict or equivalent administrative division",
+                        "type": "string"
+                    },
+                    "moo": {
+                        "description": "Village number, if avaliable",
+                        "type": "string"
+                    },
+                    "moo_name": {
+                        "description": "Village name, if avaliable",
+                        "type": "string"
+                    },
+                    "house_num": {
+                        "description": "House number, if avaliable",
+                        "type": "string"
+                    },
+                    "postcode": {
+                        "description": "Thailand postcode",
+                        "type": "string"
+                    },
+                    "aoi": {
+                        "description": "Area of interest, if avaliable",
+                        "type": "string"
+                    },
+                    "water": {
+                        "description": "Water body, if exist",
+                        "type": "string"
+                    },
+                    "elevation": {
+                        "description": "Elevation in meters, if avaliable",
+                        "type": "number"
+                    },
+                    "road": {
+                        "description": "Road name, if exist",
+                        "type": "string"
+                    },
+                    "road_lon": {
+                        "description": "Nearest position on road",
+                        "type": "number"
+                    },
+                    "road_lat": {
+                        "description": "Nearest position on road",
+                        "type": "number"
+                    }
+                }
+            },
+            "GuideRoute": {
+                "type": "object",
+                "properties": {
+                    "turn": {
+                        "description": "Turn instruction
+              <table><tr><td>TurnCode value</td><td>Description</td></tr>
+              <tr><td>0</td><td>Turn left</td></tr>
+              <tr><td>1</td><td>Turn right</td></tr>
+              <tr><td>2</td><td>Turn slight left</td></tr>
+              <tr><td>3</td><td>Turn slight right</td></tr>
+              <tr><td>4</td><td>Unknown direction</td></tr>
+              <tr><td>5</td><td>Go straight</td></tr>
+              <tr><td>6</td><td>Enter tollway</td></tr>
+              <tr><td>9</td><td>Arrive</td></tr>
+              <tr><td>11</td><td>Travel by ferry</td></tr>
+              </table>","type": "TurnCode"
+                    },
+                    "name": {
+                        "description": "Road name",
+                        "type": "string"
+                    },
+                    "distance": {
+                        "description": "Section distance in meters",
+                        "type": "integer"
+                    },
+                    "interval": {
+                        "description": "Section travel time in seconds",
+                        "type": "integer"
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "suggestDataset": {
+                "name": "dataset",
+                "in": "query",
+                "description": "Suggest dataset (* Default dataset)
+          <table><tr><td>Available value</td><td>Dataset from</td></tr>
+          <tr><td>poi_p *</td><td>Numap POI</td></tr>
+          <tr><td>poi_r *</td><td>Road</td></tr>
+          <tr><td>poi_a *</td><td>Administrative division</td></tr>
+          <tr><td>poi_b *</td><td>House number from Numap bldg</td></tr>
+          <tr><td>poi_c *</td><td>changed today (POI)</td></tr>
+          <tr><td>poi2 *</td><td>Contributed POI</td></tr>
+          <tr><td>poi3 *</td><td>Tag data</td></tr>
+          <tr><td>s_pg *</td><td>Line/Polygon</td></tr>
+          <tr><td>nw_s *</td><td>River</td></tr>
+          <tr><td>m2h_s *</td><td>House number from POI address</td></tr>
+          <tr><td>bus_s</td><td>Bus route</td></tr>
+          <tr><td>s_osmpnt</td><td>OSM POI</td></tr>
+          <tr><td>s_osmline</td><td>OSM Line</td></tr>
+          <tr><td>s_osmpol</td><td>OSM Polygon</td></tr>
+          <tr><td>overture_p</td><td>Overture Map</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "Comma-separated string values"
+                }
+            },
+            "searchDataset": {
+                "name": "dataset",
+                "in": "query",
+                "description": "Search dataset (* Default dataset)
+          <table><tr><td>Available value</td><td>Dataset from</td></tr>
+          <tr><td>data2p *</td><td>Numap POI</td></tr>
+          <tr><td>data2r *</td><td>Road</td></tr>
+          <tr><td>data2a *</td><td>Administrative division</td></tr>
+          <tr><td>data2b *</td><td>House number from Numap bldg</td></tr>
+          <tr><td>change *</td><td>changed today (POI)</td></tr>
+          <tr><td>con *</td><td>Contributed POI</td></tr>
+          <tr><td>tag *</td><td>Tag data</td></tr>
+          <tr><td>pg *</td><td>Line/Polygon</td></tr>
+          <tr><td>nw *</td><td>River</td></tr>
+          <tr><td>m2h *</td><td>House number from POI address</td></tr>
+          <tr><td>bus</td><td>Bus route</td></tr>
+          <tr><td>osmpnt</td><td>OSM POI</td></tr>
+          <tr><td>osmline</td><td>OSM Line</td></tr>
+          <tr><td>osmpol</td><td>OSM Polygon</td></tr>
+          <tr><td>overture2p</td><td>Overture Map</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "Comma-separated string values"
+                }
+            },
+            "poiDataset": {
+                "name": "dataset",
+                "in": "query",
+                "description": "POI dataset (* Default dataset)
+          <table><tr><td>Available value</td><td>Dataset from</td></tr>
+          <tr><td>main2p *</td><td>Numap POI</td></tr>
+          <tr><td>main2road *</td><td>Road</td></tr>
+          <tr><td>main2adming *</td><td>Administrative division</td></tr>
+          <tr><td>main2building *</td><td>House number from Numap bldg</td></tr>
+          <tr><td>poi-changed-today *</td><td>changed today (POI)</td></tr>
+          <tr><td>poi-contrib *</td><td>Contributed POI</td></tr>
+          <tr><td></td><td>Tag data</td></tr>
+          <tr><td>pg-clustertag *</td><td>Line/Polygon</td></tr>
+          <tr><td>water *</td><td>River</td></tr>
+          <tr><td></td><td>House number from POI address</td></tr>
+          <tr><td></td><td>Bus route</td></tr>
+          <tr><td>osm-points</td><td>OSM POI</td></tr>
+          <tr><td>osm-line</td><td>OSM Line</td></tr>
+          <tr><td>osm-polygon</td><td>OSM Polygon</td></tr>
+          <tr><td>overture-points</td><td>Overture Map</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "Comma-separated string values"
+                }
+            },
+            "locale": {
+                "name": "locale",
+                "in": "query",
+                "description": "Language in ISO 639-1 format
+          <table><tr><td>Available value</td><td>Language</td></tr>
+          <tr><td>th (default)</td><td>Thai</td></tr>
+          <tr><td>en</td><td>English</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "th",
+                        "en"
+                    ],
+                    "default": "th"
+                }
+            },
+            "forceSmartSearch": {
+                "name": "forcesmartsearch",
+                "in": "query",
+                "description": "Flag to indicate whether to perform SmartSearch function
+          <table><tr><td>Available value</td><td>Description</td></tr>
+          <tr><td>0 (default)</td><td>Only when there are few results: only perform SmartSearch if the results from Search are fewer than the 'forcelimit'.</td></tr>
+          <tr><td>1</td><td>Always: always perform SmartSearch function (might result in more transactions) to get as many results as possible according to the given 'limit' parameter.</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "default": 0
+                }
+            },
+            "extendedSearch": {
+                "name": "extendedsearch",
+                "in": "query",
+                "description": "Perform extended search functions from external services `(extra fee might apply)`
+          <table><tr><td>Available value</td><td>Description</td></tr>
+          <tr><td>0 (default)</td><td>No extended search: do not perform any extended search. Return only Longdo Map search results.</td></tr>
+          <tr><td>1</td><td>Only when there are results: perform extended search only in case there are fewer results from Longdo Map search than the 'extendedlimit'.</td></tr>
+          <tr><td>2</td><td>Always: always perform extended search together with the Longdo Map search.</td></tr>
+          <tr><td>3</td><td>Extended only: perform and return only extended search results without Longdo Map search.</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3
+                    ],
+                    "default": 0
+                }
+            },
+            "extendedType": {
+                "name": "extendedtype",
+                "in": "query",
+                "description": "Extended search type
+          <table><tr><td>Available value</td><td>Description</td></tr>
+          <tr><td>findplacefromtext (default)</td><td>Find place from text</td></tr>
+          <tr><td>textsearch</td><td>Text search</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "findplacefromtext",
+                        "textsearch"
+                    ],
+                    "default": "findplacefromtext"
+                }
+            },
+            "routeMode": {
+                "name": "mode",
+                "in": "query",
+                "description": "Search mode
+          <table><tr><td>Available value</td><td>Description</td></tr>
+          <tr><td>t (default)</td><td>Fastest route and avoid traffic congestions, with the real-time or predicted traffic condition (if time is specified)</td></tr>
+          <tr><td>c</td><td>Fastest route (disregarding traffic condition), return static travel time</td></tr>
+          <tr><td>d</td><td>Shortest route, return static travel time</td></tr>
+          <tr><td>e</td><td>Shortest route, return travel time with traffic condition</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "string",
+                    "enum": [
+                        "t",
+                        "c",
+                        "d",
+                        "e"
+                    ],
+                    "default": "t",
+                    "example": "t"
+                }
+            },
+            "routeType": {
+                "name": "type",
+                "in": "query",
+                "description": "Allow travel method (Can combine with bitwise OR)
+          <table><tr><td>Available value</td><td>Description</td></tr>
+          <tr><td>1</td><td>Road</td></tr>
+          <tr><td>8</td><td>Ferry</td></tr>
+          <tr><td>16</td><td>Tollway</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "interger"
+                }
+            },
+            "routeRestrict": {
+                "name": "restrict",
+                "in": "query",
+                "description": "Vehicle restriction
+          <table><tr><td>Available value</td><td>Description</td></tr>
+          <tr><td>0 (default)</td><td>No restriction</td></tr>
+          <tr><td>1</td><td>Don't use route that restrict motorcycle</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "integer",
+                    "enum": [
+                        0,
+                        1
+                    ],
+                    "default": 0
+                }
+            },
+            "spanFlag": {
+                "name": "flag",
+                "in": "query",
+                "description": "Result type (Can combine with bitwise OR) (default: All)
+          <table><tr><td>Available value</td><td>Description</td></tr>
+          <tr><td>1</td><td>Road lines</td></tr>
+          <tr><td>2</td><td>Boundary of span</td></tr>
+          </table>","required": false,
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        },
+        "securitySchemes": {
+            "key": {
+                "type": "apiKey",
+                "name": "key",
+                "in": "query"
+            }
+        }
+    },
+    "security": {
+        "key": []
+    }
+}
