@@ -5,7 +5,7 @@ import { SearchModule } from './search/search.module';
 @Module({
   imports: [
     LongdoMapModule.forRoot({
-      isGlobal:true
+      isGlobal: true
     }),
     SearchModule
   ],

@@ -68,6 +68,11 @@ export class LongdoMapService {
     extractaddress?: number;
     key: string;
   }): Promise<any> {
+
+    if(!params.keyword) {
+      params.keyword = " ";
+    }
+    
     const response: AxiosResponse = await firstValueFrom(
       this.httpService.get(`${this.baseUrl}/smartsearch/json/search`, { params })
     );
