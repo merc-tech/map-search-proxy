@@ -55,6 +55,9 @@ export class PlaceCache {
 
   @Prop()
   updatedAt: Date
+
+  @Prop({ required: true })
+  expiredAt: Date
 }
 
 export type PlaceCacheDocument = HydratedDocument<PlaceCache>

@@ -8,6 +8,7 @@ import { ConfigType } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 import { PlaceCache, PlaceCacheDocument } from 'src/schema/place-cache.schema'
+import dayjs from 'dayjs'
 
 @Controller('search')
 export class SearchController {
@@ -37,6 +38,9 @@ export class SearchController {
           },
           $maxDistance: 1000, //
         },
+      },
+      expiredAt: {
+        $gt: new Date(),
       },
     })
 
@@ -74,6 +78,7 @@ export class SearchController {
             type: 'Point',
             coordinates: [place.lon, place.lat],
           },
+          expiredAt: dayjs().add(30, 'day').toDate(),
         })
 
         await newPlaceCache.save()
