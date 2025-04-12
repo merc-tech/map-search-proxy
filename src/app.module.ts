@@ -3,8 +3,8 @@ import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 import longdoMapConfig from './config/longdo-map.config'
 import { LongdoMapModule } from './longdo-map/longdo-map.module'
-import { PlaceCache, PlaceCacheSchema } from './schema/place-cache.schema'
 import { SearchModule } from './search/search.module'
+import { UsageModule } from './usage/usage.module'
 
 @Module({
   imports: [
@@ -27,6 +27,7 @@ import { SearchModule } from './search/search.module'
     }),
 
     SearchModule,
+    UsageModule,
   ],
 })
 export class AppModule {}
