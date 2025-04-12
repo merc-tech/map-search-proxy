@@ -2422,88 +2422,85 @@
                       <tr><td>c</td><td>Fastest route (disregarding traffic condition), return static travel time</td></tr>
                       <tr><td>d</td><td>Shortest route, return static travel time</td></tr>
                       <tr><td>e</td><td>Shortest route, return travel time with traffic condition</td></tr>
-                      </table>","type": "string",
-                                        "enum": [
-                                            "t",
-                                            "c",
-                                            "d",
-                                            "e"
-                                        ],
-                                        "default": "t",
-                                        "example": "t"
-                                    }
+                      </table>","type": "string","enum": ["t",
+                                        "c",
+                                        "d",
+                                        "e"
+                                    ],
+                                    "default": "t",
+                                    "example": "t"
                                 }
+                            }
+                        },
+                        "encoding": {
+                            "lon[]": {
+                                "style": "form",
+                                "explode": true,
+                                "allowReserved": true
                             },
-                            "encoding": {
-                                "lon[]": {
-                                    "style": "form",
-                                    "explode": true,
-                                    "allowReserved": true
-                                },
-                                "lat[]": {
-                                    "style": "form",
-                                    "explode": true,
-                                    "allowReserved": true
-                                }
+                            "lat[]": {
+                                "style": "form",
+                                "explode": true,
+                                "allowReserved": true
                             }
                         }
                     }
-                },
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "status": {
-                                            "description": "HTTP status code indicating the success or failure of the request",
-                                            "type": "integer"
-                                        },
-                                        "message": {
-                                            "description": "Description of the status",
-                                            "type": "string"
-                                        },
-                                        "otsp": {
-                                            "description": "Indicating whether the route is an Open Loop TSP (OTSP) \"0\" = Do not return to start/first point, \"1\" = Return to start/first point",
-                                            "type": "string"
-                                        },
-                                        "mode": {
-                                            "description": "Route search mode
+                }
+            },
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "description": "HTTP status code indicating the success or failure of the request",
+                                        "type": "integer"
+                                    },
+                                    "message": {
+                                        "description": "Description of the status",
+                                        "type": "string"
+                                    },
+                                    "otsp": {
+                                        "description": "Indicating whether the route is an Open Loop TSP (OTSP) \"0\" = Do not return to start/first point, \"1\" = Return to start/first point",
+                                        "type": "string"
+                                    },
+                                    "mode": {
+                                        "description": "Route search mode
                         <table><tr><td>Available value</td><td>Description</td></tr>
                         <tr><td>t (default)</td><td>Fastest route and avoid traffic congestions, with the real-time or predicted traffic condition (if time is specified)</td></tr>
                         <tr><td>c</td><td>Fastest route (disregarding traffic condition), return static travel time</td></tr>
                         <tr><td>d</td><td>Shortest route, return static travel time</td></tr>
                         <tr><td>e</td><td>Shortest route, return travel time with traffic condition</td></tr>
                         </table>","type": "string"
-                                        },
-                                        "body": {
-                                            "description": "Contains detailed information about the route",
-                                            "type": "object",
-                                            "properties": {
-                                                "sequence": {
-                                                    "description": "Ordered list of indices representing the sequence in which locations should be visited. The sequence is circular, ending where it began",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "integer"
-                                                    }
-                                                },
-                                                "location": {
-                                                    "description": "Array of objects, each containing latitude (lat) and longitude (lon) of a specific location",
-                                                    "type": "array",
-                                                    "items": {
-                                                        "$ref": "#/components/schemas/Location"
-                                                    }
-                                                },
-                                                "total_distance": {
-                                                    "description": "Total distance of the optimal route",
-                                                    "type": "integer"
-                                                },
-                                                "total_time": {
-                                                    "description": "Total time required to traverse the optimal route",
+                                    },
+                                    "body": {
+                                        "description": "Contains detailed information about the route",
+                                        "type": "object",
+                                        "properties": {
+                                            "sequence": {
+                                                "description": "Ordered list of indices representing the sequence in which locations should be visited. The sequence is circular, ending where it began",
+                                                "type": "array",
+                                                "items": {
                                                     "type": "integer"
                                                 }
+                                            },
+                                            "location": {
+                                                "description": "Array of objects, each containing latitude (lat) and longitude (lon) of a specific location",
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/Location"
+                                                }
+                                            },
+                                            "total_distance": {
+                                                "description": "Total distance of the optimal route",
+                                                "type": "integer"
+                                            },
+                                            "total_time": {
+                                                "description": "Total time required to traverse the optimal route",
+                                                "type": "integer"
                                             }
                                         }
                                     }
@@ -2513,50 +2510,167 @@
                     }
                 }
             }
-        },
-        "/ws/route/location": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
+        }
+    },
+    "/ws/route/location": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "route_no",
+                "in": "query",
+                "description": "หมายเลขทางหลวง (Route number)",
+                "required": true,
+                "schema": {
+                    "type": "number"
                 }
+            },
+            {
+                "name": "km",
+                "in": "query",
+                "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Route"
             ],
-            "parameters": [
-                {
-                    "name": "route_no",
-                    "in": "query",
-                    "description": "หมายเลขทางหลวง (Route number)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "km",
-                    "in": "query",
-                    "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
+            "summary": "สืบค้นข้อมูลพิกัดจากหมายเลขทางหลวง และหลักกิโลเมตร (Get location by route no.)",
+            "description": "<label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/route/location?route_no=4&km=177.367&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+            "operationId": "GetLocationByRouteNo",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "object",
+                                        "properties": {
+                                            "route_no": {
+                                                "type": "string",
+                                                "description": "หมายเลขทางหลวง (Route number)"
+                                            },
+                                            "road_name": {
+                                                "type": "string",
+                                                "description": "ชื่อถนน (Road name)"
+                                            },
+                                            "km": {
+                                                "type": "string",
+                                                "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)"
+                                            },
+                                            "km_start": {
+                                                "type": "string",
+                                                "description": "กิโลเมตรเริ่มต้นของทางหลวง (Begin Kilometre marker)"
+                                            },
+                                            "km_end": {
+                                                "type": "string",
+                                                "description": "กิโลเมตรสิ้นสุดของทางหลวง (End Kilometre marker)"
+                                            },
+                                            "lat": {
+                                                "type": "string",
+                                                "description": "ละติจูดของตำแหน่งหลักกิโลเมตร (Latitude)"
+                                            },
+                                            "lon": {
+                                                "type": "string",
+                                                "description": "ลองจิจูดของตำแหน่งหลักกิโลเมตร (Longitude)"
+                                            },
+                                            "source": {
+                                                "type": "string",
+                                                "description": "ที่มาของข้อมูล (Data source) - DOH: กรมทางหลวง, DRR: กรมทางหลวงชนบท"
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
+            },
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/route/name": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "lat",
+                "in": "query",
+                "description": "ละติจูด (Latitude)",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "lon",
+                "in": "query",
+                "description": "ลองจิจูด (Longitude)",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Route"
             ],
-            "get": {
-                "tags": [
-                    "Route"
-                ],
-                "summary": "สืบค้นข้อมูลพิกัดจากหมายเลขทางหลวง และหลักกิโลเมตร (Get location by route no.)",
-                "description": "<label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/route/location?route_no=4&km=177.367&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
-                "operationId": "GetLocationByRouteNo",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
+            "summary": "สืบค้นข้อมูลหมายเลขทางหลวง และหลักกิโลเมตร จากพิกัดทางภูมิศาสตร์ (ละติจูด, ลองจิจูด) (Get route by location)",
+            "description": "<label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/route/name?lat=13.776625&lon=100.178303&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+            "operationId": "GetRouteByLocation",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "array",
+                                        "items": {
                                             "type": "object",
                                             "properties": {
                                                 "route_no": {
@@ -2571,48 +2685,54 @@
                                                     "type": "string",
                                                     "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)"
                                                 },
-                                                "km_start": {
+                                                "distance": {
                                                     "type": "string",
-                                                    "description": "กิโลเมตรเริ่มต้นของทางหลวง (Begin Kilometre marker)"
-                                                },
-                                                "km_end": {
-                                                    "type": "string",
-                                                    "description": "กิโลเมตรสิ้นสุดของทางหลวง (End Kilometre marker)"
-                                                },
-                                                "lat": {
-                                                    "type": "string",
-                                                    "description": "ละติจูดของตำแหน่งหลักกิโลเมตร (Latitude)"
-                                                },
-                                                "lon": {
-                                                    "type": "string",
-                                                    "description": "ลองจิจูดของตำแหน่งหลักกิโลเมตร (Longitude)"
+                                                    "description": "ระยะห่างของหลักกิโลเมตรและพิกัดทางภูมิศาสตร์ [หน่วยเป็นเมตร] (Distance from input location [Unit: metre])"
                                                 },
                                                 "source": {
                                                     "type": "string",
                                                     "description": "ที่มาของข้อมูล (Data source) - DOH: กรมทางหลวง, DRR: กรมทางหลวงชนบท"
                                                 }
                                             }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
+                                        }
+                                    },
+                                    "meta": {
+                                        "description": "Metadata",
+                                        "type": "object",
+                                        "properties": {
+                                            "span": {
+                                                "type": "string",
+                                                "description": "รัศมีในการสืบค้น [หน่วยเป็น m:เมตร, deg:องศา] (Span [in m:metres, deg:degrees])"
+                                            },
+                                            "max_span_m": {
+                                                "type": "string",
+                                                "description": "รัศมีที่กำหนดไว้สูงสุดในการสืบค้น [เมตร] (Maximum span value in metres)"
+                                            },
+                                            "max_span_deg": {
+                                                "type": "string",
+                                                "description": "รัศมีที่กำหนดไว้สูงสุดในการสืบค้น [องศา] (Maximum span value in degrees)"
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
                                             }
                                         }
                                     }
@@ -2620,1004 +2740,882 @@
                             }
                         }
                     }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/route/name": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
                 }
-            ],
-            "parameters": [
+            },
+            "security": [
                 {
-                    "name": "lat",
-                    "in": "query",
-                    "description": "ละติจูด (Latitude)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "lon",
-                    "in": "query",
-                    "description": "ลองจิจูด (Longitude)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
+                    "key": []
                 }
-            ],
-            "get": {
-                "tags": [
-                    "Route"
-                ],
-                "summary": "สืบค้นข้อมูลหมายเลขทางหลวง และหลักกิโลเมตร จากพิกัดทางภูมิศาสตร์ (ละติจูด, ลองจิจูด) (Get route by location)",
-                "description": "<label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/route/name?lat=13.776625&lon=100.178303&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
-                "operationId": "GetRouteByLocation",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "route_no": {
-                                                        "type": "string",
-                                                        "description": "หมายเลขทางหลวง (Route number)"
-                                                    },
-                                                    "road_name": {
-                                                        "type": "string",
-                                                        "description": "ชื่อถนน (Road name)"
-                                                    },
-                                                    "km": {
-                                                        "type": "string",
-                                                        "description": "ตำแหน่งหลักกิโลเมตร (Kilometre marker)"
-                                                    },
-                                                    "distance": {
-                                                        "type": "string",
-                                                        "description": "ระยะห่างของหลักกิโลเมตรและพิกัดทางภูมิศาสตร์ [หน่วยเป็นเมตร] (Distance from input location [Unit: metre])"
-                                                    },
-                                                    "source": {
-                                                        "type": "string",
-                                                        "description": "ที่มาของข้อมูล (Data source) - DOH: กรมทางหลวง, DRR: กรมทางหลวงชนบท"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "meta": {
-                                            "description": "Metadata",
-                                            "type": "object",
-                                            "properties": {
-                                                "span": {
-                                                    "type": "string",
-                                                    "description": "รัศมีในการสืบค้น [หน่วยเป็น m:เมตร, deg:องศา] (Span [in m:metres, deg:degrees])"
-                                                },
-                                                "max_span_m": {
-                                                    "type": "string",
-                                                    "description": "รัศมีที่กำหนดไว้สูงสุดในการสืบค้น [เมตร] (Maximum span value in metres)"
-                                                },
-                                                "max_span_deg": {
-                                                    "type": "string",
-                                                    "description": "รัศมีที่กำหนดไว้สูงสุดในการสืบค้น [องศา] (Maximum span value in degrees)"
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/GeoServiceMS/json/areainfo": {
-            "servers": [
-                {
-                    "url": "https://api.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "polygon",
-                    "in": "query",
-                    "description": "Area (GeoJSON string)",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
-                    },
-                    "example": "{\"coordinates\":[[[100.53864,13.73430],[100.54574,13.73397],[100.54439,13.72648],[100.53681,13.72965],[100.538640,13.73430]]],\"type\":\"Polygon\"}"
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "Area info",
-                "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/GeoServiceMS/json/areainfo?polygon=%7B%22coordinates%22%3A%5B%5B%5B100.53864%2C13.73430%5D%2C%5B100.54574%2C13.73397%5D%2C%5B100.54439%2C13.72648%5D%2C%5B100.53681%2C13.72965%5D%2C%5B100.538640%2C13.73430%5D%5D%5D%2C%22type%22%3A%22Polygon%22%7D&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
-                "operationId": "GetAreaInfo",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "ms_building": {
-                                            "description": "Number of buildings",
-                                            "type": "integer"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/population/facebook": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "wkt",
-                    "in": "query",
-                    "description": "พื้นที่ทางภูมิศาสตร์ ขนาดไม่เกิน 1,000 ตร.กม. ในรูปแบบ Well Known Text format (Bound of Area in Well Known Text format - The area must be less than 1,000 km²)",
-                    "required": true,
-                    "schema": {
-                        "type": "string"
-                    }
-                },
-                {
-                    "name": "year",
-                    "in": "query",
-                    "description": "ปี ค.ศ. ของข้อมูล โดยหากไม่ระบุจะมีค่าเป็น 2020 (Data year - Default value: 2020)",
-                    "required": false,
-                    "schema": {
-                        "type": "number"
-                    }
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "สืบค้นข้อมูลจำนวนประชากร จากพื้นที่ทางภูมิศาสตร์ (Get Facebook population)",
-                "description": "<label>Data Source</label><ul><li><a href=\"https://data.humdata.org/dataset/thailand-high-resolution-population-density-maps-demographic-estimates\" target=\"_blank\">Thailand: High Resolution Population Density Maps</a></li></ul><label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/population/facebook?wkt=POLYGON((100.52842274308205 13.723118631970578,100.52841201424599 13.721523974091259,100.53015008568764 13.721513551455093,100.53018227219582 13.72310820940525,100.52842274308205 13.723118631970578))&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
-                "operationId": "GetFacebookPopulation",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "object",
-                                            "properties": {
-                                                "summary": {
-                                                    "type": "number",
-                                                    "description": "จำนวนประชากร หน่วยเป็นคน (A population [Unit: person])"
-                                                }
-                                            }
-                                        },
-                                        "meta": {
-                                            "description": "Metadata",
-                                            "type": "object",
-                                            "properties": {
-                                                "source": {
-                                                    "type": "string",
-                                                    "description": "ที่มาของข้อมูล (Data source)"
-                                                },
-                                                "year": {
-                                                    "type": "string",
-                                                    "description": "ปี ค.ศ. ของข้อมูล (Data year)"
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/stats/debt": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "year",
-                    "in": "query",
-                    "description": "ปีของข้อมูล (พ.ศ.)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "สืบค้นข้อมูลรายจ่ายครัวเรือน (ระดับ จังหวัด)",
-                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
-                "operationId": "GetDebt",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "geocode": {
-                                                        "type": "string",
-                                                        "description": "รหัส จังหวัด(10 => bangkok, 11 => Samut Prakan)"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาไทย จังหวัด"
-                                                    },
-                                                    "name_en": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด"
-                                                    },
-                                                    "value": {
-                                                        "type": "number",
-                                                        "description": "หนี้ครัวเรือน (บาท)"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/stats/deposit": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "year",
-                    "in": "query",
-                    "description": "ปีของข้อมูล (พ.ศ.)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "month",
-                    "in": "query",
-                    "description": "เดือนของข้อมูล",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "geocode",
-                    "in": "query",
-                    "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
-                    "required": false,
-                    "schema": {
-                        "type": "string"
-                    }
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "สืบค้นข้อมูลเงินฝาก (อำเภอ จังหวัด)",
-                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
-                "operationId": "GetDeposit",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "geocode": {
-                                                        "type": "string",
-                                                        "description": "รหัส จังหวัด, อำเภอ(10 => bangkok, 11 => Samut Prakan)"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ"
-                                                    },
-                                                    "name_en": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ"
-                                                    },
-                                                    "value": {
-                                                        "type": "number",
-                                                        "description": "จำนวนเงิน (ล้านบาท)"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/stats/household": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "year",
-                    "in": "query",
-                    "description": "ปีของข้อมูล (พ.ศ.)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "geocode",
-                    "in": "query",
-                    "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
-                    "required": false,
-                    "schema": {
-                        "type": "string"
-                    }
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "สืบค้นข้อมูลจำนวนหลังคาเรือน (ระดับ หมู่บ้าน ตำบล อำเภอ จังหวัด)",
-                "description": "<label>Data Source</label><ul><li><a href=\"https://stat.bora.dopa.go.th/stat/statnew/statMONTH/statmonth/#/view\" target=\"_blank\">สำนักบริหารการทะเบียน กรมการปกครอง</a></li></ul>",
-                "operationId": "GetHousehold",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "geocode": {
-                                                        "type": "string",
-                                                        "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
-                                                    },
-                                                    "name_en": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
-                                                    },
-                                                    "value": {
-                                                        "type": "number",
-                                                        "description": "จำนวนหลังคาเรือน (หลัง)"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/stats/income": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "year",
-                    "in": "query",
-                    "description": "ปีของข้อมูล (พ.ศ.)",
-                    "required": false,
-                    "schema": {
-                        "type": "number"
-                    }
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "รายได้ประชากร (ระดับ จังหวัด)",
-                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
-                "operationId": "GetIncome",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "geocode": {
-                                                        "type": "string",
-                                                        "description": "รหัส จังหวัด(10 => bangkok, 11 => Samut Prakan)"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาไทย จังหวัด"
-                                                    },
-                                                    "name_en": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด"
-                                                    },
-                                                    "value": {
-                                                        "type": "number",
-                                                        "description": "รายได้ (บาท)"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/stats/loan": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "year",
-                    "in": "query",
-                    "description": "ปีของข้อมูล (พ.ศ.)",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "month",
-                    "in": "query",
-                    "description": "เดือนของข้อมูล",
-                    "required": true,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "geocode",
-                    "in": "query",
-                    "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
-                    "required": false,
-                    "schema": {
-                        "type": "string"
-                    }
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "สืบค้นข้อมูลสินเชื่อ (อำเภอ จังหวัด)",
-                "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
-                "operationId": "GetLoan",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "geocode": {
-                                                        "type": "string",
-                                                        "description": "รหัส จังหวัด, อำเภอ(10 => bangkok, 11 => Samut Prakan)"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ"
-                                                    },
-                                                    "name_en": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ"
-                                                    },
-                                                    "value": {
-                                                        "type": "number",
-                                                        "description": "จำนวนเงิน (ล้านบาท)"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
-        },
-        "/ws/stats/population": {
-            "servers": [
-                {
-                    "url": "https://map.longdo.com"
-                }
-            ],
-            "parameters": [
-                {
-                    "name": "year",
-                    "in": "query",
-                    "description": "ปีของข้อมูล (พ.ศ.)",
-                    "required": false,
-                    "schema": {
-                        "type": "number"
-                    }
-                },
-                {
-                    "name": "geocode",
-                    "in": "query",
-                    "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)",
-                    "required": false,
-                    "schema": {
-                        "type": "string"
-                    }
-                }
-            ],
-            "get": {
-                "tags": [
-                    "Geo"
-                ],
-                "summary": "สืบค้นข้อมูลจำนวนประชากรไทย (ระดับ หมู่บ้าน ตำบล อำเภอ จังหวัด)",
-                "description": "<label>Data Source</label><ul><li><a href=\"https://stat.bora.dopa.go.th/stat/statnew/statMONTH/statmonth/#/view\" target=\"_blank\">สำนักบริหารการทะเบียน กรมการปกครอง</a></li></ul>",
-                "operationId": "GetPopulation",
-                "responses": {
-                    "200": {
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "description": "Result",
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "description": "ข้อมูลผลลัพธ์ (Object of results)",
-                                            "type": "array",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "geocode": {
-                                                        "type": "string",
-                                                        "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)"
-                                                    },
-                                                    "name": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาไทย จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
-                                                    },
-                                                    "name_en": {
-                                                        "type": "string",
-                                                        "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
-                                                    },
-                                                    "m_amount": {
-                                                        "type": "number",
-                                                        "description": "จำนวนประชากรชาย (คน)"
-                                                    },
-                                                    "f_amount": {
-                                                        "type": "number",
-                                                        "description": "จำนวนประชากรหญิง (คน)"
-                                                    },
-                                                    "total": {
-                                                        "type": "number",
-                                                        "description": "จำนวนรวม (คน)"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "status": {
-                                            "description": "สถานะของผลลัพธ์ (Response status)",
-                                            "type": "object",
-                                            "properties": {
-                                                "code": {
-                                                    "type": "integer",
-                                                    "description": "HTTP response status codes"
-                                                },
-                                                "error_code": {
-                                                    "type": "string",
-                                                    "description": "รหัสของความผิดพลาด (Error code)"
-                                                },
-                                                "text": {
-                                                    "type": "string",
-                                                    "description": "คำอธิบายความผิดพลาด (Error message)"
-                                                },
-                                                "details": {
-                                                    "type": "string",
-                                                    "description": "รายละเอียดของความผิดพลาด (Error details)"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "key": []
-                    }
-                ]
-            }
+            ]
         }
     },
-    "components": {
-        "schemas": {
-            "AddressInfo": {
-                "type": "object",
-                "properties": {
-                    "name": {
-                        "description": "Address info name (eg. place name, building name, condominium name etc.)",
-                        "type": "string"
-                    },
-                    "distance": {
-                        "description": "String similarity distance (0 = input text are all the same as correction data.)",
-                        "type": "integer"
-                    },
-                    "prefix": {
-                        "description": "Do the text input have prefix?",
-                        "type": "boolean"
+    "/GeoServiceMS/json/areainfo": {
+        "servers": [
+            {
+                "url": "https://api.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "polygon",
+                "in": "query",
+                "description": "Area (GeoJSON string)",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                },
+                "example": "{\"coordinates\":[[[100.53864,13.73430],[100.54574,13.73397],[100.54439,13.72648],[100.53681,13.72965],[100.538640,13.73430]]],\"type\":\"Polygon\"}"
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "Area info",
+            "description": "<label>Example</label><ul><li><a href=\"https://api.longdo.com/GeoServiceMS/json/areainfo?polygon=%7B%22coordinates%22%3A%5B%5B%5B100.53864%2C13.73430%5D%2C%5B100.54574%2C13.73397%5D%2C%5B100.54439%2C13.72648%5D%2C%5B100.53681%2C13.72965%5D%2C%5B100.538640%2C13.73430%5D%5D%5D%2C%22type%22%3A%22Polygon%22%7D&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+            "operationId": "GetAreaInfo",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "ms_building": {
+                                        "description": "Number of buildings",
+                                        "type": "integer"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
-            "Location": {
-                "type": "object",
-                "properties": {
-                    "lon": {
-                        "description": "Longitude",
-                        "type": "number"
-                    },
-                    "lat": {
-                        "description": "Latitude",
-                        "type": "number"
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/population/facebook": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "wkt",
+                "in": "query",
+                "description": "พื้นที่ทางภูมิศาสตร์ ขนาดไม่เกิน 1,000 ตร.กม. ในรูปแบบ Well Known Text format (Bound of Area in Well Known Text format - The area must be less than 1,000 km²)",
+                "required": true,
+                "schema": {
+                    "type": "string"
+                }
+            },
+            {
+                "name": "year",
+                "in": "query",
+                "description": "ปี ค.ศ. ของข้อมูล โดยหากไม่ระบุจะมีค่าเป็น 2020 (Data year - Default value: 2020)",
+                "required": false,
+                "schema": {
+                    "type": "number"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "สืบค้นข้อมูลจำนวนประชากร จากพื้นที่ทางภูมิศาสตร์ (Get Facebook population)",
+            "description": "<label>Data Source</label><ul><li><a href=\"https://data.humdata.org/dataset/thailand-high-resolution-population-density-maps-demographic-estimates\" target=\"_blank\">Thailand: High Resolution Population Density Maps</a></li></ul><label>Example</label><ul><li><a href=\"https://map.longdo.com/ws/population/facebook?wkt=POLYGON((100.52842274308205 13.723118631970578,100.52841201424599 13.721523974091259,100.53015008568764 13.721513551455093,100.53018227219582 13.72310820940525,100.52842274308205 13.723118631970578))&key=fortestonlydonotuseinproduction!\" target=\"_blank\">Minimum params</a></li></ul>",
+            "operationId": "GetFacebookPopulation",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "object",
+                                        "properties": {
+                                            "summary": {
+                                                "type": "number",
+                                                "description": "จำนวนประชากร หน่วยเป็นคน (A population [Unit: person])"
+                                            }
+                                        }
+                                    },
+                                    "meta": {
+                                        "description": "Metadata",
+                                        "type": "object",
+                                        "properties": {
+                                            "source": {
+                                                "type": "string",
+                                                "description": "ที่มาของข้อมูล (Data source)"
+                                            },
+                                            "year": {
+                                                "type": "string",
+                                                "description": "ปี ค.ศ. ของข้อมูล (Data year)"
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
-            "ReverseGeocodingResult": {
-                "type": "object",
-                "properties": {
-                    "geocode": {
-                        "description": "Thailand geocode",
-                        "type": "string"
-                    },
-                    "country": {
-                        "description": "Country",
-                        "type": "string"
-                    },
-                    "province": {
-                        "description": "Province or equivalent administrative division",
-                        "type": "string"
-                    },
-                    "district": {
-                        "description": "District or equivalent administrative division",
-                        "type": "string"
-                    },
-                    "subdistrict": {
-                        "description": "Subdistrict or equivalent administrative division",
-                        "type": "string"
-                    },
-                    "moo": {
-                        "description": "Village number, if avaliable",
-                        "type": "string"
-                    },
-                    "moo_name": {
-                        "description": "Village name, if avaliable",
-                        "type": "string"
-                    },
-                    "house_num": {
-                        "description": "House number, if avaliable",
-                        "type": "string"
-                    },
-                    "postcode": {
-                        "description": "Thailand postcode",
-                        "type": "string"
-                    },
-                    "aoi": {
-                        "description": "Area of interest, if avaliable",
-                        "type": "string"
-                    },
-                    "water": {
-                        "description": "Water body, if exist",
-                        "type": "string"
-                    },
-                    "elevation": {
-                        "description": "Elevation in meters, if avaliable",
-                        "type": "number"
-                    },
-                    "road": {
-                        "description": "Road name, if exist",
-                        "type": "string"
-                    },
-                    "road_lon": {
-                        "description": "Nearest position on road",
-                        "type": "number"
-                    },
-                    "road_lat": {
-                        "description": "Nearest position on road",
-                        "type": "number"
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/stats/debt": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "year",
+                "in": "query",
+                "description": "ปีของข้อมูล (พ.ศ.)",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "สืบค้นข้อมูลรายจ่ายครัวเรือน (ระดับ จังหวัด)",
+            "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+            "operationId": "GetDebt",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "geocode": {
+                                                    "type": "string",
+                                                    "description": "รหัส จังหวัด(10 => bangkok, 11 => Samut Prakan)"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาไทย จังหวัด"
+                                                },
+                                                "name_en": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาอังกฤษ จังหวัด"
+                                                },
+                                                "value": {
+                                                    "type": "number",
+                                                    "description": "หนี้ครัวเรือน (บาท)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             },
-            "GuideRoute": {
-                "type": "object",
-                "properties": {
-                    "turn": {
-                        "description": "Turn instruction
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/stats/deposit": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "year",
+                "in": "query",
+                "description": "ปีของข้อมูล (พ.ศ.)",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "month",
+                "in": "query",
+                "description": "เดือนของข้อมูล",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "geocode",
+                "in": "query",
+                "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "สืบค้นข้อมูลเงินฝาก (อำเภอ จังหวัด)",
+            "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+            "operationId": "GetDeposit",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "geocode": {
+                                                    "type": "string",
+                                                    "description": "รหัส จังหวัด, อำเภอ(10 => bangkok, 11 => Samut Prakan)"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาไทย จังหวัด, อำเภอ"
+                                                },
+                                                "name_en": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ"
+                                                },
+                                                "value": {
+                                                    "type": "number",
+                                                    "description": "จำนวนเงิน (ล้านบาท)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/stats/household": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "year",
+                "in": "query",
+                "description": "ปีของข้อมูล (พ.ศ.)",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "geocode",
+                "in": "query",
+                "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "สืบค้นข้อมูลจำนวนหลังคาเรือน (ระดับ หมู่บ้าน ตำบล อำเภอ จังหวัด)",
+            "description": "<label>Data Source</label><ul><li><a href=\"https://stat.bora.dopa.go.th/stat/statnew/statMONTH/statmonth/#/view\" target=\"_blank\">สำนักบริหารการทะเบียน กรมการปกครอง</a></li></ul>",
+            "operationId": "GetHousehold",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "geocode": {
+                                                    "type": "string",
+                                                    "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาไทย จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                },
+                                                "name_en": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                },
+                                                "value": {
+                                                    "type": "number",
+                                                    "description": "จำนวนหลังคาเรือน (หลัง)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/stats/income": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "year",
+                "in": "query",
+                "description": "ปีของข้อมูล (พ.ศ.)",
+                "required": false,
+                "schema": {
+                    "type": "number"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "รายได้ประชากร (ระดับ จังหวัด)",
+            "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+            "operationId": "GetIncome",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "geocode": {
+                                                    "type": "string",
+                                                    "description": "รหัส จังหวัด(10 => bangkok, 11 => Samut Prakan)"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาไทย จังหวัด"
+                                                },
+                                                "name_en": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาอังกฤษ จังหวัด"
+                                                },
+                                                "value": {
+                                                    "type": "number",
+                                                    "description": "รายได้ (บาท)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/stats/loan": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "year",
+                "in": "query",
+                "description": "ปีของข้อมูล (พ.ศ.)",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "month",
+                "in": "query",
+                "description": "เดือนของข้อมูล",
+                "required": true,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "geocode",
+                "in": "query",
+                "description": "รหัส จังหวัด (10 => bangkok, 11 => Samut Prakan)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "สืบค้นข้อมูลสินเชื่อ (อำเภอ จังหวัด)",
+            "description": "<label>Data Source</label><ul><li><a href=\"http://statbbi.nso.go.th/staticreport/page/sector/th/08.aspx\" target=\"_blank\">สำนักงานสถิติแห่งชาติ</a></li></ul>",
+            "operationId": "GetLoan",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "geocode": {
+                                                    "type": "string",
+                                                    "description": "รหัส จังหวัด, อำเภอ(10 => bangkok, 11 => Samut Prakan)"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาไทย จังหวัด, อำเภอ"
+                                                },
+                                                "name_en": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ"
+                                                },
+                                                "value": {
+                                                    "type": "number",
+                                                    "description": "จำนวนเงิน (ล้านบาท)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    },
+    "/ws/stats/population": {
+        "servers": [
+            {
+                "url": "https://map.longdo.com"
+            }
+        ],
+        "parameters": [
+            {
+                "name": "year",
+                "in": "query",
+                "description": "ปีของข้อมูล (พ.ศ.)",
+                "required": false,
+                "schema": {
+                    "type": "number"
+                }
+            },
+            {
+                "name": "geocode",
+                "in": "query",
+                "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)",
+                "required": false,
+                "schema": {
+                    "type": "string"
+                }
+            }
+        ],
+        "get": {
+            "tags": [
+                "Geo"
+            ],
+            "summary": "สืบค้นข้อมูลจำนวนประชากรไทย (ระดับ หมู่บ้าน ตำบล อำเภอ จังหวัด)",
+            "description": "<label>Data Source</label><ul><li><a href=\"https://stat.bora.dopa.go.th/stat/statnew/statMONTH/statmonth/#/view\" target=\"_blank\">สำนักบริหารการทะเบียน กรมการปกครอง</a></li></ul>",
+            "operationId": "GetPopulation",
+            "responses": {
+                "200": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "description": "Result",
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                        "description": "ข้อมูลผลลัพธ์ (Object of results)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "geocode": {
+                                                    "type": "string",
+                                                    "description": "รหัส จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน(10 => bangkok, 11 => Samut Prakan)"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาไทย จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                },
+                                                "name_en": {
+                                                    "type": "string",
+                                                    "description": "ชื่อภาษาอังกฤษ จังหวัด, อำเภอ, ตำบล หรือ หมู่บ้าน"
+                                                },
+                                                "m_amount": {
+                                                    "type": "number",
+                                                    "description": "จำนวนประชากรชาย (คน)"
+                                                },
+                                                "f_amount": {
+                                                    "type": "number",
+                                                    "description": "จำนวนประชากรหญิง (คน)"
+                                                },
+                                                "total": {
+                                                    "type": "number",
+                                                    "description": "จำนวนรวม (คน)"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": {
+                                        "description": "สถานะของผลลัพธ์ (Response status)",
+                                        "type": "object",
+                                        "properties": {
+                                            "code": {
+                                                "type": "integer",
+                                                "description": "HTTP response status codes"
+                                            },
+                                            "error_code": {
+                                                "type": "string",
+                                                "description": "รหัสของความผิดพลาด (Error code)"
+                                            },
+                                            "text": {
+                                                "type": "string",
+                                                "description": "คำอธิบายความผิดพลาด (Error message)"
+                                            },
+                                            "details": {
+                                                "type": "string",
+                                                "description": "รายละเอียดของความผิดพลาด (Error details)"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "security": [
+                {
+                    "key": []
+                }
+            ]
+        }
+    }
+},
+"components": {
+    "schemas": {
+        "AddressInfo": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "description": "Address info name (eg. place name, building name, condominium name etc.)",
+                    "type": "string"
+                },
+                "distance": {
+                    "description": "String similarity distance (0 = input text are all the same as correction data.)",
+                    "type": "integer"
+                },
+                "prefix": {
+                    "description": "Do the text input have prefix?",
+                    "type": "boolean"
+                }
+            }
+        },
+        "Location": {
+            "type": "object",
+            "properties": {
+                "lon": {
+                    "description": "Longitude",
+                    "type": "number"
+                },
+                "lat": {
+                    "description": "Latitude",
+                    "type": "number"
+                }
+            }
+        },
+        "ReverseGeocodingResult": {
+            "type": "object",
+            "properties": {
+                "geocode": {
+                    "description": "Thailand geocode",
+                    "type": "string"
+                },
+                "country": {
+                    "description": "Country",
+                    "type": "string"
+                },
+                "province": {
+                    "description": "Province or equivalent administrative division",
+                    "type": "string"
+                },
+                "district": {
+                    "description": "District or equivalent administrative division",
+                    "type": "string"
+                },
+                "subdistrict": {
+                    "description": "Subdistrict or equivalent administrative division",
+                    "type": "string"
+                },
+                "moo": {
+                    "description": "Village number, if avaliable",
+                    "type": "string"
+                },
+                "moo_name": {
+                    "description": "Village name, if avaliable",
+                    "type": "string"
+                },
+                "house_num": {
+                    "description": "House number, if avaliable",
+                    "type": "string"
+                },
+                "postcode": {
+                    "description": "Thailand postcode",
+                    "type": "string"
+                },
+                "aoi": {
+                    "description": "Area of interest, if avaliable",
+                    "type": "string"
+                },
+                "water": {
+                    "description": "Water body, if exist",
+                    "type": "string"
+                },
+                "elevation": {
+                    "description": "Elevation in meters, if avaliable",
+                    "type": "number"
+                },
+                "road": {
+                    "description": "Road name, if exist",
+                    "type": "string"
+                },
+                "road_lon": {
+                    "description": "Nearest position on road",
+                    "type": "number"
+                },
+                "road_lat": {
+                    "description": "Nearest position on road",
+                    "type": "number"
+                }
+            }
+        },
+        "GuideRoute": {
+            "type": "object",
+            "properties": {
+                "turn": {
+                    "description": "Turn instruction
               <table><tr><td>TurnCode value</td><td>Description</td></tr>
               <tr><td>0</td><td>Turn left</td></tr>
               <tr><td>1</td><td>Turn right</td></tr>
@@ -3629,27 +3627,27 @@
               <tr><td>9</td><td>Arrive</td></tr>
               <tr><td>11</td><td>Travel by ferry</td></tr>
               </table>","type": "TurnCode"
-                    },
-                    "name": {
-                        "description": "Road name",
-                        "type": "string"
-                    },
-                    "distance": {
-                        "description": "Section distance in meters",
-                        "type": "integer"
-                    },
-                    "interval": {
-                        "description": "Section travel time in seconds",
-                        "type": "integer"
-                    }
+                },
+                "name": {
+                    "description": "Road name",
+                    "type": "string"
+                },
+                "distance": {
+                    "description": "Section distance in meters",
+                    "type": "integer"
+                },
+                "interval": {
+                    "description": "Section travel time in seconds",
+                    "type": "integer"
                 }
             }
-        },
-        "parameters": {
-            "suggestDataset": {
-                "name": "dataset",
-                "in": "query",
-                "description": "Suggest dataset (* Default dataset)
+        }
+    },
+    "parameters": {
+        "suggestDataset": {
+            "name": "dataset",
+            "in": "query",
+            "description": "Suggest dataset (* Default dataset)
           <table><tr><td>Available value</td><td>Dataset from</td></tr>
           <tr><td>poi_p *</td><td>Numap POI</td></tr>
           <tr><td>poi_r *</td><td>Road</td></tr>
@@ -3666,15 +3664,13 @@
           <tr><td>s_osmline</td><td>OSM Line</td></tr>
           <tr><td>s_osmpol</td><td>OSM Polygon</td></tr>
           <tr><td>overture_p</td><td>Overture Map</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "Comma-separated string values"
-                }
-            },
-            "searchDataset": {
-                "name": "dataset",
-                "in": "query",
-                "description": "Search dataset (* Default dataset)
+          </table>","required": false,"schema": {"type": "Comma-separated string values"
+        }
+    },
+    "searchDataset": {
+        "name": "dataset",
+        "in": "query",
+        "description": "Search dataset (* Default dataset)
           <table><tr><td>Available value</td><td>Dataset from</td></tr>
           <tr><td>data2p *</td><td>Numap POI</td></tr>
           <tr><td>data2r *</td><td>Road</td></tr>
@@ -3691,15 +3687,13 @@
           <tr><td>osmline</td><td>OSM Line</td></tr>
           <tr><td>osmpol</td><td>OSM Polygon</td></tr>
           <tr><td>overture2p</td><td>Overture Map</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "Comma-separated string values"
-                }
-            },
-            "poiDataset": {
-                "name": "dataset",
-                "in": "query",
-                "description": "POI dataset (* Default dataset)
+          </table>","required": false,"schema": {"type": "Comma-separated string values"
+    }
+},
+"poiDataset": {
+    "name": "dataset",
+    "in": "query",
+    "description": "POI dataset (* Default dataset)
           <table><tr><td>Available value</td><td>Dataset from</td></tr>
           <tr><td>main2p *</td><td>Numap POI</td></tr>
           <tr><td>main2road *</td><td>Road</td></tr>
@@ -3716,157 +3710,139 @@
           <tr><td>osm-line</td><td>OSM Line</td></tr>
           <tr><td>osm-polygon</td><td>OSM Polygon</td></tr>
           <tr><td>overture-points</td><td>Overture Map</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "Comma-separated string values"
-                }
-            },
-            "locale": {
-                "name": "locale",
-                "in": "query",
-                "description": "Language in ISO 639-1 format
+          </table>","required": false,"schema": {"type": "Comma-separated string values"
+}
+},
+"locale": {
+"name": "locale",
+"in": "query",
+"description": "Language in ISO 639-1 format
           <table><tr><td>Available value</td><td>Language</td></tr>
           <tr><td>th (default)</td><td>Thai</td></tr>
           <tr><td>en</td><td>English</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "string",
-                    "enum": [
-                        "th",
-                        "en"
-                    ],
-                    "default": "th"
-                }
-            },
-            "forceSmartSearch": {
-                "name": "forcesmartsearch",
-                "in": "query",
-                "description": "Flag to indicate whether to perform SmartSearch function
+          </table>","required": false,"schema": {"type": "string",
+"enum": [
+    "th",
+    "en"
+],
+"default": "th"
+}
+},
+"forceSmartSearch": {
+"name": "forcesmartsearch",
+"in": "query",
+"description": "Flag to indicate whether to perform SmartSearch function
           <table><tr><td>Available value</td><td>Description</td></tr>
           <tr><td>0 (default)</td><td>Only when there are few results: only perform SmartSearch if the results from Search are fewer than the 'forcelimit'.</td></tr>
           <tr><td>1</td><td>Always: always perform SmartSearch function (might result in more transactions) to get as many results as possible according to the given 'limit' parameter.</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "integer",
-                    "enum": [
-                        0,
-                        1
-                    ],
-                    "default": 0
-                }
-            },
-            "extendedSearch": {
-                "name": "extendedsearch",
-                "in": "query",
-                "description": "Perform extended search functions from external services `(extra fee might apply)`
+          </table>","required": false,"schema": {"type": "integer",
+"enum": [
+0,
+1
+],
+"default": 0
+}
+},
+"extendedSearch": {
+"name": "extendedsearch",
+"in": "query",
+"description": "Perform extended search functions from external services `(extra fee might apply)`
           <table><tr><td>Available value</td><td>Description</td></tr>
           <tr><td>0 (default)</td><td>No extended search: do not perform any extended search. Return only Longdo Map search results.</td></tr>
           <tr><td>1</td><td>Only when there are results: perform extended search only in case there are fewer results from Longdo Map search than the 'extendedlimit'.</td></tr>
           <tr><td>2</td><td>Always: always perform extended search together with the Longdo Map search.</td></tr>
           <tr><td>3</td><td>Extended only: perform and return only extended search results without Longdo Map search.</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "integer",
-                    "enum": [
-                        0,
-                        1,
-                        2,
-                        3
-                    ],
-                    "default": 0
-                }
-            },
-            "extendedType": {
-                "name": "extendedtype",
-                "in": "query",
-                "description": "Extended search type
+          </table>","required": false,"schema": {"type": "integer",
+"enum": [
+0,
+1,
+2,
+3
+],
+"default": 0
+}
+},
+"extendedType": {
+"name": "extendedtype",
+"in": "query",
+"description": "Extended search type
           <table><tr><td>Available value</td><td>Description</td></tr>
           <tr><td>findplacefromtext (default)</td><td>Find place from text</td></tr>
           <tr><td>textsearch</td><td>Text search</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "string",
-                    "enum": [
-                        "findplacefromtext",
-                        "textsearch"
-                    ],
-                    "default": "findplacefromtext"
-                }
-            },
-            "routeMode": {
-                "name": "mode",
-                "in": "query",
-                "description": "Search mode
+          </table>","required": false,"schema": {"type": "string",
+"enum": [
+"findplacefromtext",
+"textsearch"
+],
+"default": "findplacefromtext"
+}
+},
+"routeMode": {
+"name": "mode",
+"in": "query",
+"description": "Search mode
           <table><tr><td>Available value</td><td>Description</td></tr>
           <tr><td>t (default)</td><td>Fastest route and avoid traffic congestions, with the real-time or predicted traffic condition (if time is specified)</td></tr>
           <tr><td>c</td><td>Fastest route (disregarding traffic condition), return static travel time</td></tr>
           <tr><td>d</td><td>Shortest route, return static travel time</td></tr>
           <tr><td>e</td><td>Shortest route, return travel time with traffic condition</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "string",
-                    "enum": [
-                        "t",
-                        "c",
-                        "d",
-                        "e"
-                    ],
-                    "default": "t",
-                    "example": "t"
-                }
-            },
-            "routeType": {
-                "name": "type",
-                "in": "query",
-                "description": "Allow travel method (Can combine with bitwise OR)
+          </table>","required": false,"schema": {"type": "string",
+"enum": [
+"t",
+"c",
+"d",
+"e"
+],
+"default": "t",
+"example": "t"
+}
+},
+"routeType": {
+"name": "type",
+"in": "query",
+"description": "Allow travel method (Can combine with bitwise OR)
           <table><tr><td>Available value</td><td>Description</td></tr>
           <tr><td>1</td><td>Road</td></tr>
           <tr><td>8</td><td>Ferry</td></tr>
           <tr><td>16</td><td>Tollway</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "interger"
-                }
-            },
-            "routeRestrict": {
-                "name": "restrict",
-                "in": "query",
-                "description": "Vehicle restriction
+          </table>","required": false,"schema": {"type": "interger"
+}
+},
+"routeRestrict": {
+"name": "restrict",
+"in": "query",
+"description": "Vehicle restriction
           <table><tr><td>Available value</td><td>Description</td></tr>
           <tr><td>0 (default)</td><td>No restriction</td></tr>
           <tr><td>1</td><td>Don't use route that restrict motorcycle</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "integer",
-                    "enum": [
-                        0,
-                        1
-                    ],
-                    "default": 0
-                }
-            },
-            "spanFlag": {
-                "name": "flag",
-                "in": "query",
-                "description": "Result type (Can combine with bitwise OR) (default: All)
+          </table>","required": false,"schema": {"type": "integer",
+"enum": [
+0,
+1
+],
+"default": 0
+}
+},
+"spanFlag": {
+"name": "flag",
+"in": "query",
+"description": "Result type (Can combine with bitwise OR) (default: All)
           <table><tr><td>Available value</td><td>Description</td></tr>
           <tr><td>1</td><td>Road lines</td></tr>
           <tr><td>2</td><td>Boundary of span</td></tr>
-          </table>","required": false,
-                "schema": {
-                    "type": "integer"
-                }
-            }
-        },
-        "securitySchemes": {
-            "key": {
-                "type": "apiKey",
-                "name": "key",
-                "in": "query"
-            }
-        }
-    },
-    "security": {
-        "key": []
-    }
+          </table>","required": false,"schema": {"type": "integer"
+}
+}
+},
+"securitySchemes": {
+"key": {
+"type": "apiKey",
+"name": "key",
+"in": "query"
+}
+}
+},
+"security": {
+"key": []
+}
 }

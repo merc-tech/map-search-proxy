@@ -7,7 +7,11 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules", "*.json", "dist"]
+    "ignore": [
+      "node_modules",
+      "*.json",
+      "dist"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -97,7 +101,9 @@
         "useValidTypeof": "error"
       }
     },
-    "ignore": ["eslint.config.mjs"]
+    "ignore": [
+      "eslint.config.mjs"
+    ]
   },
   "javascript": {
     "formatter": {
@@ -111,14 +117,21 @@
       "attributePosition": "auto",
       "bracketSpacing": true
     },
-    "globals": ["exports"],
+    "globals": [
+      "exports"
+    ],
     "parser": {
       "unsafeParameterDecoratorsEnabled": true
     }
   },
   "overrides": [
     {
-      "include": ["**/*.ts", "**/*.tsx", "**/*.mts", "**/*.cts"],
+      "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.mts",
+        "**/*.cts"
+      ],
       "linter": {
         "rules": {
           "complexity": {
