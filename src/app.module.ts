@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
-import longdoMapConfig from './config/longdo-map.config'
 import { LongdoMapModule } from './longdo-map/longdo-map.module'
 import { SearchModule } from './search/search.module'
 import { UsageModule } from './usage/usage.module'
+import { ProviderApiKeyModule } from './provider-api-key/provider-api-key.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [longdoMapConfig],
       envFilePath: ['.env'],
     }),
     MongooseModule.forRoot('mongodb://localhost:27017/', {
@@ -28,6 +27,7 @@ import { UsageModule } from './usage/usage.module'
 
     SearchModule,
     UsageModule,
+    ProviderApiKeyModule,
   ],
 })
 export class AppModule {}

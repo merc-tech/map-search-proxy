@@ -1,0 +1,53 @@
+name: On push - main
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_n_push:
+    name: Build & Push
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set outputs
+        id: short_sha
+        # run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to GitHub Docker Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: lowercase repository
+        id: repository
+        uses: ASzc/change-string-case-action@v6
+        with:
+          string: ${{ github.repository }}
+      - name: Build container image
+        uses: docker/build-push-action@v6
+        with:
+          # platforms: linux/arm64,linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          pull: true
+          push: true
+          context: .
+          file: ./Dockerfile
+          tags: |
+            ghcr.io/${{ steps.repository.outputs.lowercase }}:${{ steps.short_sha.outputs.sha_short }}
+      - name: Set output variables
+        id: set_image_name
+        # run: echo ::set-output name=image_name::"ghcr.io/${{ steps.repository.outputs.lowercase }}:${{ steps.short_sha.outputs.sha_short }}"
+        run: echo "image_name=ghcr.io/${{ steps.repository.outputs.lowercase }}:${{ steps.short_sha.outputs.sha_short }}" >> $GITHUB_OUTPUT
+    outputs:
+      image_name: ${{ steps.set_image_name.outputs.image_name}}

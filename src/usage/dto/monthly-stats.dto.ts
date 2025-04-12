@@ -6,22 +6,32 @@ export class MonthlyStatsDto {
   @IsOptional()
   @IsISO8601()
   @Transform(({ value }) => {
+    console.log('Transforming startDate:', value)
     if (value) {
       const date = dayjs(value)
-      return date.isValid() ? date.toDate() : dayjs().startOf('year').toDate()
+      const result = date.isValid() ? date.startOf('month').toDate() : dayjs().startOf('month').toDate()
+      console.log('Transformed startDate:', result)
+      return result
     }
-    return dayjs().startOf('year').toDate()
+    const result = dayjs().startOf('month').toDate()
+    console.log('Default startDate:', result)
+    return result
   })
   startDate: Date
 
   @IsOptional()
   @IsISO8601()
   @Transform(({ value }) => {
+    console.log('Transforming endDate:', value)
     if (value) {
       const date = dayjs(value)
-      return date.isValid() ? date.toDate() : dayjs().endOf('year').toDate()
+      const result = date.isValid() ? date.endOf('month').toDate() : dayjs().endOf('month').toDate()
+      console.log('Transformed endDate:', result)
+      return result
     }
-    return dayjs().endOf('year').toDate()
+    const result = dayjs().endOf('month').toDate()
+    console.log('Default endDate:', result)
+    return result
   })
   endDate: Date
 }

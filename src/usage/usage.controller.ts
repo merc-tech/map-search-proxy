@@ -1,12 +1,12 @@
 import { Controller, Get, Query } from '@nestjs/common'
 import { DailyStats, MonthlyStats } from '../schema/usage-stats.schema'
-import { UsageStatsService } from '../search/usage-stats.service'
+import { UsageService } from './usage.service'
 import { DailyStatsDto } from './dto/daily-stats.dto'
 import { MonthlyStatsDto } from './dto/monthly-stats.dto'
 
 @Controller('usage')
 export class UsageController {
-  constructor(private readonly usageStatsService: UsageStatsService) {}
+  constructor(private readonly usageStatsService: UsageService) {}
 
   @Get('daily')
   async getDailyStats(

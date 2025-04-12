@@ -11,7 +11,7 @@ import {
 } from '../schema/usage-stats.schema'
 
 @Injectable()
-export class UsageStatsService {
+export class UsageService {
   constructor(
     @InjectModel(DailyStats.name)
     private dailyStatsModel: Model<DailyStatsDocument>,
@@ -79,12 +79,27 @@ export class UsageStatsService {
     endDate: Date,
   ): Promise<MonthlyStats[]> {
     try {
-      return await this.monthlyStatsModel
+      const start = !isNil(startDate)
+        ? dayjs(startDate).startOf('month').toDate()
+        : dayjs().startOf('month').toDate()
+      const end = !isNil(endDate)
+        ? dayjs(endDate).endOf('month').toDate()
+        : dayjs().endOf('month').toDate()
+
+      console.log('Fetching monthly stats with date range:', {
+        start,
+        end,
+      })
+
+      const results = await this.monthlyStatsModel
         .find({
-          date: { $gte: startDate, $lte: endDate },
+          date: { $gte: start, $lte: end },
         })
         .sort({ date: 1 })
         .exec()
+
+      console.log('Found monthly stats:', results.length)
+      return results
     } catch (error) {
       console.error('Error fetching monthly stats:', error)
       throw new Error('Failed to fetch monthly stats')

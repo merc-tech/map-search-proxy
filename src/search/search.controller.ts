@@ -1,15 +1,13 @@
-import { Controller, Get, Inject, Logger, Query } from '@nestjs/common'
-import { ConfigType } from '@nestjs/config'
+import { Controller, Get, Logger, Query } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { plainToInstance } from 'class-transformer'
 import dayjs from 'dayjs'
 import { get, isNil, pick } from 'lodash'
 import { Model } from 'mongoose'
-import longdoMapConfig from 'src/config/longdo-map.config'
 import { LongdoMapService } from 'src/longdo-map/longdo-map.service'
 import { PlaceCache, PlaceCacheDocument } from 'src/schema/place-cache.schema'
 import { SearchPlaceQuery, SearchPlaceResult } from './dto/search-place.dto'
-import { UsageStatsService } from './usage-stats.service'
+import { UsageService } from '../usage/usage.service'
 
 @Controller('search')
 export class SearchController {
@@ -17,17 +15,14 @@ export class SearchController {
 
   constructor(
     private readonly longdoMapService: LongdoMapService,
-    @Inject(longdoMapConfig.KEY)
-    private readonly longdoMapConf: ConfigType<typeof longdoMapConfig>,
     @InjectModel(PlaceCache.name)
     private placeCacheModel: Model<PlaceCacheDocument>,
-    private readonly usageStatsService: UsageStatsService,
+    private readonly usageStatsService: UsageService,
   ) {}
 
   @Get('/place')
   async searchPlace(@Query() query: SearchPlaceQuery) {
-    const apiKey = this.longdoMapConf.randomApiKey()
-    this.logger.debug(`API Key: ${apiKey}`)
+    this.logger.debug('Searching for place')
 
     let place: SearchPlaceResult | null = null
 
@@ -69,7 +64,6 @@ export class SearchController {
         lat: +query.lat,
         lon: +query.lon,
         limit: 1,
-        key: apiKey,
       })
 
       if (!isNil(result)) {
