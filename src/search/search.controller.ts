@@ -1,14 +1,15 @@
 import { Controller, Get, Inject, Logger, Query } from '@nestjs/common'
-import { SearchPlaceQuery, SearchPlaceResult } from './dto/search-place.dto'
-import { LongdoMapService } from 'src/longdo-map/longdo-map.service'
-import { get, pick } from 'lodash'
-import { plainToInstance } from 'class-transformer'
-import longdoMapConfig from 'src/config/longdo-map.config'
 import { ConfigType } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { PlaceCache, PlaceCacheDocument } from 'src/schema/place-cache.schema'
+import { plainToInstance } from 'class-transformer'
 import dayjs from 'dayjs'
+import { get, pick } from 'lodash'
+import { Model } from 'mongoose'
+import longdoMapConfig from 'src/config/longdo-map.config'
+import { LongdoMapService } from 'src/longdo-map/longdo-map.service'
+import { PlaceCache, PlaceCacheDocument } from 'src/schema/place-cache.schema'
+import { SearchPlaceQuery, SearchPlaceResult } from './dto/search-place.dto'
+import { UsageStatsService } from './usage-stats.service'
 
 @Controller('search')
 export class SearchController {
@@ -20,6 +21,7 @@ export class SearchController {
     private readonly longdoMapConf: ConfigType<typeof longdoMapConfig>,
     @InjectModel(PlaceCache.name)
     private placeCacheModel: Model<PlaceCacheDocument>,
+    private readonly usageStatsService: UsageStatsService,
   ) {}
 
   @Get('/place')
@@ -46,6 +48,9 @@ export class SearchController {
 
     if (cache) {
       this.logger.debug('Cache Hit')
+      this.usageStatsService.incrementCacheHits().catch((e) => {
+        this.logger.error('Failed to increment cache hits', e)
+      })
 
       place = {
         name: cache.name,
@@ -56,6 +61,9 @@ export class SearchController {
     } else {
       this.logger.debug('Cache Miss')
       this.logger.debug('Querying Longdo Map API')
+      this.usageStatsService.incrementApiCalls().catch((e) => {
+        this.logger.error('Failed to increment API calls', e)
+      })
 
       const result = await this.longdoMapService.smartSearch({
         lat: +query.lat,

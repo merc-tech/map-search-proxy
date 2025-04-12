@@ -1,25 +1,24 @@
-import { Expose } from 'class-transformer';
-import { IsLatitude, IsLongitude } from 'class-validator';
+import { Expose } from 'class-transformer'
+import { IsLatitude, IsLongitude } from 'class-validator'
 
 export class SearchPlaceQuery {
-    @IsLatitude()
-    lat: string;
+  @IsLatitude()
+  lat: string
 
-
-    @IsLongitude()
-    lon: string;
+  @IsLongitude()
+  lon: string
 }
 
 export class SearchPlaceResult {
-    @Expose()
-    name: string;
+  @Expose()
+  name: string
 
-    @Expose()
-    lat: number;
-    
-    @Expose()
-    lon: number;
+  @Expose()
+  lat: number
 
-    @Expose()
-    address: string;
+  @Expose()
+  lon: number
+
+  @Expose()
+  address: string
 }

@@ -22,7 +22,7 @@ export const CatSchema = SchemaFactory.createForClass(Cat);
  */
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import { HydratedDocument, HydrateOptions } from 'mongoose'
+import { HydrateOptions, HydratedDocument } from 'mongoose'
 
 export interface GeoPoint {
   type: string
