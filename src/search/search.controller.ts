@@ -3,7 +3,7 @@ import { ConfigType } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { plainToInstance } from 'class-transformer'
 import dayjs from 'dayjs'
-import { get, pick } from 'lodash'
+import { get, isNil, pick } from 'lodash'
 import { Model } from 'mongoose'
 import longdoMapConfig from 'src/config/longdo-map.config'
 import { LongdoMapService } from 'src/longdo-map/longdo-map.service'
@@ -38,11 +38,11 @@ export class SearchController {
             type: 'Point',
             coordinates: [query.lon, query.lat],
           },
-          $maxDistance: 1000, //
+          $maxDistance: 1000,
         },
       },
       expiredAt: {
-        $gt: new Date(),
+        $gt: dayjs().toDate(),
       },
     })
 
@@ -53,10 +53,10 @@ export class SearchController {
       })
 
       place = {
-        name: cache.name,
-        address: cache.address,
-        lat: cache.location.coordinates[1],
-        lon: cache.location.coordinates[0],
+        name: get(cache, 'name'),
+        address: get(cache, 'address'),
+        lat: get(cache, 'location.coordinates.1'),
+        lon: get(cache, 'location.coordinates.0'),
       }
     } else {
       this.logger.debug('Cache Miss')
@@ -72,19 +72,16 @@ export class SearchController {
         key: apiKey,
       })
 
-      if (result) {
-        place = pick(get(result, ['data', 0]), [
-          'name',
-          'address',
-          'lat',
-          'lon',
-        ])
+      if (!isNil(result)) {
+        const firstResult = get(result, ['data', 0])
+        place = pick(firstResult, ['name', 'address', 'lat', 'lon'])
+
         const newPlaceCache = new this.placeCacheModel({
-          name: place.name,
-          address: place.address,
+          name: get(place, 'name'),
+          address: get(place, 'address'),
           location: {
             type: 'Point',
-            coordinates: [place.lon, place.lat],
+            coordinates: [get(place, 'lon'), get(place, 'lat')],
           },
           expiredAt: dayjs().add(30, 'day').toDate(),
         })

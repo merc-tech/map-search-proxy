@@ -9,12 +9,22 @@ export class UsageController {
   constructor(private readonly usageStatsService: UsageStatsService) {}
 
   @Get('daily')
-  async getDailyStats(@Query() dateRange: DailyStatsDto): Promise<DailyStats[]> {
-    return await this.usageStatsService.getDailyStats(dateRange.startDate, dateRange.endDate)
+  async getDailyStats(
+    @Query() dateRange: DailyStatsDto,
+  ): Promise<DailyStats[]> {
+    return await this.usageStatsService.getDailyStats(
+      dateRange.startDate,
+      dateRange.endDate,
+    )
   }
 
   @Get('monthly')
-  async getMonthlyStats(@Query() dateRange: MonthlyStatsDto): Promise<MonthlyStats[]> {
-    return await this.usageStatsService.getMonthlyStats(dateRange.startDate, dateRange.endDate)
+  async getMonthlyStats(
+    @Query() dateRange: MonthlyStatsDto,
+  ): Promise<MonthlyStats[]> {
+    return await this.usageStatsService.getMonthlyStats(
+      dateRange.startDate,
+      dateRange.endDate,
+    )
   }
 }

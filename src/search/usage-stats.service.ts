@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
+import dayjs from 'dayjs'
+import { get, isNil } from 'lodash'
 import { Model } from 'mongoose'
 import {
   DailyStats,
@@ -18,9 +20,8 @@ export class UsageStatsService {
   ) {}
 
   async incrementCacheHits(): Promise<void> {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0) // Set to start of day
-    const month = new Date(today.getFullYear(), today.getMonth(), 1)
+    const today = dayjs().startOf('day').toDate()
+    const month = dayjs().startOf('month').toDate()
 
     await Promise.all([
       this.dailyStatsModel.findOneAndUpdate(
@@ -37,9 +38,8 @@ export class UsageStatsService {
   }
 
   async incrementApiCalls(): Promise<void> {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0) // Set to start of day
-    const month = new Date(today.getFullYear(), today.getMonth(), 1)
+    const today = dayjs().startOf('day').toDate()
+    const month = dayjs().startOf('month').toDate()
 
     await Promise.all([
       this.dailyStatsModel.findOneAndUpdate(
@@ -56,21 +56,22 @@ export class UsageStatsService {
   }
 
   async getDailyStats(startDate: Date, endDate: Date): Promise<DailyStats[]> {
-    try {
-      // Since data is already grouped by date during insertion, we just need to fetch it
-      return await this.dailyStatsModel
-        .find({
-          date: {
-            $gte: new Date(startDate.setHours(0, 0, 0, 0)),
-            $lte: new Date(endDate.setHours(23, 59, 59, 999)),
-          },
-        })
-        .sort({ date: 1 })
-        .exec()
-    } catch (error) {
-      console.error('Error fetching daily stats:', error)
-      throw new Error('Failed to fetch daily stats')
-    }
+    const start = !isNil(startDate)
+      ? dayjs(startDate).startOf('day').toDate()
+      : dayjs().startOf('day').toDate()
+    const end = !isNil(endDate)
+      ? dayjs(endDate).endOf('day').toDate()
+      : dayjs().endOf('day').toDate()
+
+    return await this.dailyStatsModel
+      .find({
+        date: {
+          $gte: start,
+          $lte: end,
+        },
+      })
+      .sort({ date: 1 })
+      .exec()
   }
 
   async getMonthlyStats(
